@@ -17,6 +17,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel centerPanel;
     private JPanel bottomPanel;
     private JPanel resultPanel;
+    private JPanel resultBottomPanel;
 
     private JLabel questionLabel;
     private JLabel howManyTimesLabel;
@@ -27,6 +28,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton editBtn;
     private JButton nextBtn;
     private JButton replayBtn;
+    private JButton randomPlayBtn;
 
     private JTextField inputField;
 
@@ -70,11 +72,12 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.add(btn, BorderLayout.CENTER);
         contentPane.add(panel);
 
-        // リザルト画面用のパネルを用意
-        resultPanel();
 
         // Myanki用のパネルを用意
         initMyankiPanel();
+
+        // リザルト画面用のパネルを用意
+        resultPanel();
     }
 
     // Myanki用のパネルを生成
@@ -151,28 +154,42 @@ public class AppFrame extends JFrame implements ActionListener {
 
     // リザルト画面用のパネル
     private void resultPanel() {
-        // リザルト画面のパネル
+        // リザルト画面の上部パネル
         resultPanel = new JPanel();
-        resultPanel.setLayout(new GridLayout(3, 1));
 
-        // RESULTと表示するラベル
-        JLabel titleLabel = new JLabel();
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        titleLabel.setText("RESULT");
+        // リザルト画面の下部パネル
+        resultBottomPanel = new JPanel();
+        resultBottomPanel.setLayout(new FlowLayout());
 
         // 実際の結果を表示するラベル
         resultLabel = new JLabel();
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // リプレイボタン
-        // TODO: アニメーションをつける
-        replayBtn = new JButton("click to replay");
-        replayBtn.setBorderPainted(false);
+        // 同じ問題をもう一度
+        replayBtn = new JButton("同じ問題");
         replayBtn.addActionListener(this);
 
-        resultPanel.add(titleLabel);
+        // 違う問題へ
+        randomPlayBtn = new JButton("違う問題");
+        randomPlayBtn.addActionListener(this);
+
+
         resultPanel.add(resultLabel);
-        resultPanel.add(replayBtn);
+        resultBottomPanel.add(replayBtn);
+        resultBottomPanel.add(randomPlayBtn);
+    }
+
+    private void setResultPanels() {
+        contentPane.add(resultPanel, BorderLayout.CENTER);
+        contentPane.add(resultBottomPanel, BorderLayout.SOUTH);
+    }
+
+    // リザルト画面を表示
+    public void showResult() {
+        contentPane.removeAll();
+        setResultPanels();
+        setResultText();
+        contentPane.repaint();
     }
 
     // 日本語と英文が入ったsentenceListを作成
@@ -255,13 +272,6 @@ public class AppFrame extends JFrame implements ActionListener {
         start = System.currentTimeMillis();
     }
 
-    // リザルト画面を表示
-    public void showResult() {
-        contentPane.removeAll();
-        contentPane.add(resultPanel);
-        setResultText();
-        contentPane.repaint();
-    }
 
     public void nextQestion() {
         index++;
