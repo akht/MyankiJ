@@ -17,6 +17,7 @@ public class AppFrame extends JFrame implements ActionListener {
     private JPanel centerPanel;
     private JPanel bottomPanel;
     private JPanel resultPanel;
+    private JPanel resultBottomPanel;
 
     private JLabel questionLabel;
     private JLabel howManyTimesLabel;
@@ -27,12 +28,15 @@ public class AppFrame extends JFrame implements ActionListener {
     private JButton editBtn;
     private JButton nextBtn;
     private JButton replayBtn;
+    private JButton randomPlayBtn;
 
     private JTextField inputField;
 
     private long start;
     private long end;
 
+    private String resPath = "res";
+    private String[] filelist;
     private String fileName;
     private String targetFile;
     private ArrayList<String[]> sentenceList;
@@ -70,20 +74,25 @@ public class AppFrame extends JFrame implements ActionListener {
         panel.add(btn, BorderLayout.CENTER);
         contentPane.add(panel);
 
-        // リザルト画面用のパネルを用意
-        resultPanel();
 
         // Myanki用のパネルを用意
         initMyankiPanel();
+
+        // リザルト画面用のパネルを用意
+        resultPanel();
     }
 
     // Myanki用のパネルを生成
     private void initMyankiPanel() {
-        // sentenceListを用意
-        makeSentenceList();
         // ログを生成
         logFile = new File("files/myankilog.txt");
         log = new MyankiLog(logFile);
+
+        // sentenceListを生成
+        filelist = makeFilelistInDir(resPath);
+        targetFile = pickFileRandomly(filelist);
+        sentenceList = makeSentenceList(targetFile);
+
 
         // BorderLayout.NORTHに配置するパネル
         topPanel = new JPanel();
@@ -151,53 +160,77 @@ public class AppFrame extends JFrame implements ActionListener {
 
     // リザルト画面用のパネル
     private void resultPanel() {
-        // リザルト画面のパネル
+        // リザルト画面の上部パネル
         resultPanel = new JPanel();
-        resultPanel.setLayout(new GridLayout(3, 1));
 
-        // RESULTと表示するラベル
-        JLabel titleLabel = new JLabel();
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        titleLabel.setText("RESULT");
+        // リザルト画面の下部パネル
+        resultBottomPanel = new JPanel();
+        resultBottomPanel.setLayout(new FlowLayout());
 
         // 実際の結果を表示するラベル
         resultLabel = new JLabel();
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // リプレイボタン
-        // TODO: アニメーションをつける
-        replayBtn = new JButton("click to replay");
-        replayBtn.setBorderPainted(false);
+        // 同じ問題をもう一度
+        replayBtn = new JButton("同じ問題");
         replayBtn.addActionListener(this);
 
-        resultPanel.add(titleLabel);
+        // 違う問題へ
+        randomPlayBtn = new JButton("違う問題");
+        randomPlayBtn.addActionListener(this);
+
+
         resultPanel.add(resultLabel);
-        resultPanel.add(replayBtn);
+        resultBottomPanel.add(replayBtn);
+        resultBottomPanel.add(randomPlayBtn);
+    }
+
+    private void setResultPanels() {
+        contentPane.add(resultPanel, BorderLayout.CENTER);
+        contentPane.add(resultBottomPanel, BorderLayout.SOUTH);
+    }
+
+    // リザルト画面を表示
+    private void showResult() {
+        contentPane.removeAll();
+        setResultPanels();
+        setResultText();
+        contentPane.repaint();
+    }
+
+    // res/以下の全てのファイルのファイル名を配列に格納
+    private String[] makeFilelistInDir(String dirPath) {
+        File dir = new File(dirPath);
+        return dir.list();
+    }
+
+    // res/からひとつランダムにファイルを選ぶ
+    private String pickFileRandomly(String[] filelist) {
+        int fileIndex = new Random().nextInt(filelist.length);
+        fileName = filelist[fileIndex];
+        return resPath + "/" + fileName;
     }
 
     // 日本語と英文が入ったsentenceListを作成
     // ([日,英], [日,英], [日,英], ...)となっている
-    private ArrayList<String[]> makeSentenceList() {
-        // 出題に使うテキストファイルを決定
-        String path = "res";
-        File dir = new File(path);
-        String[] files = dir.list();
-        int fileIndex = new Random().nextInt(files.length);
-        fileName = files[fileIndex];
-        targetFile = path + "/" + fileName;
-
-        // ファイルの中身を読み込み、ArrayListに格納
-        sentenceList = new ArrayList<>();
+    private ArrayList<String[]> makeSentenceList(String targetFile) {
+        ArrayList<String[]> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(targetFile))) {
             String line = br.readLine();
             while (line != null) {
-                sentenceList.add(line.split("\t"));
+                list.add(line.split("\t"));
                 line = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sentenceList;
+
+        return list;
+    }
+
+    private void makeSentenceListAgain() {
+        targetFile = pickFileRandomly(filelist);
+        sentenceList = makeSentenceList(targetFile);
     }
 
 
@@ -219,7 +252,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // inputFieldでイベントが発生したら実行
-    public void checkEvent() {
+    private void checkEvent() {
         String userInput = inputField.getText();
         // 入力が"n"なら次の問題へ
         if (userInput.equals("n")) {
@@ -236,7 +269,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // 正誤判定
-    public boolean checkAnswer() {
+    private boolean checkAnswer() {
         EnglishSentence correct = new EnglishSentence();
         EnglishSentence user = new EnglishSentence();
         correct.sentence = sentenceList.get(index)[1];
@@ -246,7 +279,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // スタート画面のパネルを削除し、Myanki用のパネルを表示
-    public void startMyanki() {
+    private void startMyanki() {
         contentPane.removeAll();
         setMyankiPanels();
         setMyankiText();
@@ -255,15 +288,8 @@ public class AppFrame extends JFrame implements ActionListener {
         start = System.currentTimeMillis();
     }
 
-    // リザルト画面を表示
-    public void showResult() {
-        contentPane.removeAll();
-        contentPane.add(resultPanel);
-        setResultText();
-        contentPane.repaint();
-    }
 
-    public void nextQestion() {
+    private void nextQestion() {
         index++;
         if (index < 10) {
             setMyankiText();
@@ -277,7 +303,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
-    public void openInEditor() {
+    private void openInEditor() {
         File file = new File(targetFile);
         Desktop desktop = Desktop.getDesktop();
         try {
@@ -297,17 +323,23 @@ public class AppFrame extends JFrame implements ActionListener {
             checkEvent();
         }
 
-        if (e.getSource() == replayBtn) {
-            index = 0;
-            startMyanki();
-        }
-
         if (e.getSource() == nextBtn) {
             nextQestion();
         }
 
         if (e.getSource() == editBtn) {
             openInEditor();
+        }
+
+        if (e.getSource() == replayBtn) {
+            index = 0;
+            startMyanki();
+        }
+
+        if (e.getSource() == randomPlayBtn) {
+            index = 0;
+            makeSentenceListAgain();
+            startMyanki();
         }
     }
 
