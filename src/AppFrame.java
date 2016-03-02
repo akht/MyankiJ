@@ -35,6 +35,8 @@ public class AppFrame extends JFrame implements ActionListener {
     private long start;
     private long end;
 
+    private String resPath = "res";
+    private String[] filelist;
     private String fileName;
     private String targetFile;
     private ArrayList<String[]> sentenceList;
@@ -82,11 +84,15 @@ public class AppFrame extends JFrame implements ActionListener {
 
     // Myanki用のパネルを生成
     private void initMyankiPanel() {
-        // sentenceListを用意
-        makeSentenceList();
         // ログを生成
         logFile = new File("files/myankilog.txt");
         log = new MyankiLog(logFile);
+
+        // sentenceListを生成
+        filelist = makeFilelistInDir(resPath);
+        targetFile = pickFileRandomly(filelist);
+        sentenceList = makeSentenceList(targetFile);
+
 
         // BorderLayout.NORTHに配置するパネル
         topPanel = new JPanel();
@@ -192,31 +198,36 @@ public class AppFrame extends JFrame implements ActionListener {
         contentPane.repaint();
     }
 
+    // res/以下の全てのファイルのファイル名を配列に格納
+    private String[] makeFilelistInDir(String dirPath) {
+        File dir = new File(dirPath);
+        return dir.list();
+    }
+
+    // res/からひとつランダムにファイルを選ぶ
+    private String pickFileRandomly(String[] filelist) {
+        int fileIndex = new Random().nextInt(filelist.length);
+        fileName = filelist[fileIndex];
+        return resPath + "/" + fileName;
+    }
+
     // 日本語と英文が入ったsentenceListを作成
     // ([日,英], [日,英], [日,英], ...)となっている
-    private ArrayList<String[]> makeSentenceList() {
-        // 出題に使うテキストファイルを決定
-        String path = "res";
-        File dir = new File(path);
-        String[] files = dir.list();
-        int fileIndex = new Random().nextInt(files.length);
-        fileName = files[fileIndex];
-        targetFile = path + "/" + fileName;
-
-        // ファイルの中身を読み込み、ArrayListに格納
-        sentenceList = new ArrayList<>();
+    private ArrayList<String[]> makeSentenceList(String targetFile) {
+        ArrayList<String[]> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(targetFile))) {
             String line = br.readLine();
             while (line != null) {
-                sentenceList.add(line.split("\t"));
+                list.add(line.split("\t"));
                 line = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sentenceList;
-    }
 
+        return list;
+    }
+    
 
     // myankiPanel上のラベルにテキストをセットする
     private void setMyankiText() {
