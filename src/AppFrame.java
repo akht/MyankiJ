@@ -185,7 +185,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // リザルト画面を表示
-    public void showResult() {
+    private void showResult() {
         contentPane.removeAll();
         setResultPanels();
         setResultText();
@@ -236,7 +236,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // inputFieldでイベントが発生したら実行
-    public void checkEvent() {
+    private void checkEvent() {
         String userInput = inputField.getText();
         // 入力が"n"なら次の問題へ
         if (userInput.equals("n")) {
@@ -253,7 +253,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // 正誤判定
-    public boolean checkAnswer() {
+    private boolean checkAnswer() {
         EnglishSentence correct = new EnglishSentence();
         EnglishSentence user = new EnglishSentence();
         correct.sentence = sentenceList.get(index)[1];
@@ -263,7 +263,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
     // スタート画面のパネルを削除し、Myanki用のパネルを表示
-    public void startMyanki() {
+    private void startMyanki() {
         contentPane.removeAll();
         setMyankiPanels();
         setMyankiText();
@@ -273,7 +273,7 @@ public class AppFrame extends JFrame implements ActionListener {
     }
 
 
-    public void nextQestion() {
+    private void nextQestion() {
         index++;
         if (index < 10) {
             setMyankiText();
@@ -287,7 +287,7 @@ public class AppFrame extends JFrame implements ActionListener {
         }
     }
 
-    public void openInEditor() {
+    private void openInEditor() {
         File file = new File(targetFile);
         Desktop desktop = Desktop.getDesktop();
         try {
