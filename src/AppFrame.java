@@ -227,7 +227,12 @@ public class AppFrame extends JFrame implements ActionListener {
 
         return list;
     }
-    
+
+    private void makeSentenceListAgain() {
+        targetFile = pickFileRandomly(filelist);
+        sentenceList = makeSentenceList(targetFile);
+    }
+
 
     // myankiPanel上のラベルにテキストをセットする
     private void setMyankiText() {
@@ -318,17 +323,23 @@ public class AppFrame extends JFrame implements ActionListener {
             checkEvent();
         }
 
-        if (e.getSource() == replayBtn) {
-            index = 0;
-            startMyanki();
-        }
-
         if (e.getSource() == nextBtn) {
             nextQestion();
         }
 
         if (e.getSource() == editBtn) {
             openInEditor();
+        }
+
+        if (e.getSource() == replayBtn) {
+            index = 0;
+            startMyanki();
+        }
+
+        if (e.getSource() == randomPlayBtn) {
+            index = 0;
+            makeSentenceListAgain();
+            startMyanki();
         }
     }
 
