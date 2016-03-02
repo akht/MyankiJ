@@ -82,7 +82,7 @@ public class AppFrame extends JFrame implements ActionListener {
         // sentenceListを用意
         makeSentenceList();
         // ログを生成
-        logFile = new File("src/files/myankilog.txt");
+        logFile = new File("files/myankilog.txt");
         log = new MyankiLog(logFile);
 
         // BorderLayout.NORTHに配置するパネル
@@ -179,7 +179,7 @@ public class AppFrame extends JFrame implements ActionListener {
     // ([日,英], [日,英], [日,英], ...)となっている
     private ArrayList<String[]> makeSentenceList() {
         // 出題に使うテキストファイルを決定
-        String path = "src/res";
+        String path = "res";
         File dir = new File(path);
         String[] files = dir.list();
         int fileIndex = new Random().nextInt(files.length);

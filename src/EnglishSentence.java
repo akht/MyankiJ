@@ -14,7 +14,7 @@ public class EnglishSentence {
 
     public EnglishSentence() {
         // 省略表現と置換用文字列が入ったHashMapを作る
-        String shortformsFile = "src/files/shortforms.txt";
+        String shortformsFile = "files/shortforms.txt";
         shortformsMap = makeShortformsMap(shortformsFile);
     }
 
