@@ -36,6 +36,7 @@ public class AppFrame extends JFrame {
         game = new Game(this);
     }
 
+    // MyankiPanelへ画面遷移
     public void toMyankiPanel() {
         contentPane.removeAll();
         contentPane.add(myankiPanel);
@@ -44,6 +45,7 @@ public class AppFrame extends JFrame {
         myankiPanel.inputField.requestFocus();
     }
 
+    // ResultPanelへ画面遷移
     public void toResultPanel() {
         contentPane.removeAll();
         contentPane.add(resultPanel);
@@ -51,6 +53,7 @@ public class AppFrame extends JFrame {
         repaint();
     }
 
+    // アプリ終了時にmyankilog.txtを上書き
     private class MyWindowListener extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {

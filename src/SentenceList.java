@@ -11,7 +11,7 @@ public class SentenceList {
     private ArrayList<String[]> sentenceList;
 
     private String resPath = "res";
-    private static String[] filelist;
+    private String[] filelist;
     public String fileName;
     public String targetFile;
 
@@ -25,14 +25,14 @@ public class SentenceList {
         return this.sentenceList.get(index);
     }
 
-
     // res/以下の全てのファイルのファイル名を配列に格納
     private String[] makeFilelistInDir(String dirPath) {
         File dir = new File(dirPath);
+
         return dir.list();
     }
 
-    // res/からひとつランダムにファイルを選ぶ
+    // res/からランダムにファイルをひとつ選ぶ
     private String pickFileRandomly(String[] filelist) {
         int fileIndex = new Random().nextInt(filelist.length);
         fileName = filelist[fileIndex];

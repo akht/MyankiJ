@@ -15,6 +15,7 @@ public class MyankiLog {
         makeLogList(logFile);
     }
 
+    // myankilog.txtの中身をそのままArrayListに格納
     private void makeLogList(File logFile) {
         logList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
@@ -62,13 +63,11 @@ public class MyankiLog {
         if (m.find()) {
             fileNumber = Integer.parseInt(m.group());
         }
+
         return fileNumber;
     }
 
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
-    // 指定行だけ取り出してインクリメントしても良いが、
-    // めんどくさい上にmyankilog.txtはせいぜい100行もないので
-    // 全て上書きする方法を採る
     public void refresh(File logFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(logFile));
              PrintWriter pw = new PrintWriter(bw)) {

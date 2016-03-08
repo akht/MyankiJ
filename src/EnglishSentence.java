@@ -46,9 +46,8 @@ public class EnglishSentence {
         returnStr = returnStr.replaceAll(sRegex, " ");
 
         // Step5
-        // HashMapのキー(配列になっている)から正規表現オブジェクトを作って
-        // それにマッチした部分をキーに対応する値(REPLACED(n))に置換
-        // どれにもマッチしなければ引数で受け取った文字列を小文字にして返す
+        // HashMapのキー(配列になっている)から正規表現オブジェクトを作り、
+        // それにマッチした部分をキーに対応する値(REPLACED(n))に置換する
         for (Entry<String[], String> entry : shortformsMap.entrySet()) {
             String[] key = entry.getKey();
             String value = entry.getValue();
@@ -85,6 +84,7 @@ public class EnglishSentence {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return map;
     }
 
@@ -94,6 +94,7 @@ public class EnglishSentence {
         if (str.endsWith(".")) {
             return str.substring(0, str.length() - 1);
         }
+
         return str;
     }
 
@@ -106,6 +107,7 @@ public class EnglishSentence {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return counts;
     }
 }

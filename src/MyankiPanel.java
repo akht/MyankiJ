@@ -21,7 +21,8 @@ public class MyankiPanel extends JPanel implements ActionListener {
         setSize(AppFrame.APP_WIDTH, AppFrame.APP_HEIGHT);
         setLayout(new BorderLayout());
 
-
+        // MyankiPanelの上にtopPanel,centerPanel,bottomPanelを配置し
+        // その３枚のパネルの上に各コンポーネントを配置する
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 3));
@@ -30,7 +31,6 @@ public class MyankiPanel extends JPanel implements ActionListener {
         centerPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 3));
 
         JPanel bottomPanel = new JPanel();
-
 
         // この問題ファイルが何回目かを表示するラベル
         howManyTimesLabel = new JLabel("22");
@@ -50,8 +50,10 @@ public class MyankiPanel extends JPanel implements ActionListener {
         questionLabel.setOpaque(true);
         questionLabel.setBackground(new Color(250, 250, 255));
         questionLabel.setPreferredSize(new Dimension(getWidth(), 80));
-        questionLabel.addMouseListener(new MyMouseListener());
         questionLabel.setHorizontalAlignment(JLabel.CENTER);
+        // クリックしている間だけ答えを表示させるためのリスナ
+        questionLabel.addMouseListener(new MyMouseListener());
+
 
         // ユーザーが入力するテキストフィールド
         inputField = new JTextField();
@@ -99,6 +101,8 @@ public class MyankiPanel extends JPanel implements ActionListener {
             appFrame.game.nextQuestion();
         }
 
+        // テキストフィールド(inputField)で
+        // リターンキーが入力されたら正誤判定
         if (e.getActionCommand().equals("RETURN")) {
             if (appFrame.game.checkAnswer()) {
                 appFrame.game.nextQuestion();
@@ -109,8 +113,6 @@ public class MyankiPanel extends JPanel implements ActionListener {
     }
 
     private class MyMouseListener extends MouseAdapter {
-//        int index = appFrame.game.index;
-
         @Override
         public void mousePressed(MouseEvent e) {
             questionLabel.setText(appFrame.game.sentenceList.getElem(appFrame.game.index)[1]);

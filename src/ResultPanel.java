@@ -11,17 +11,17 @@ public class ResultPanel extends JPanel implements ActionListener {
     public ResultPanel(AppFrame appFrame) {
         this.appFrame = appFrame;
 
-        setLayout(new BorderLayout());
         setSize(AppFrame.APP_WIDTH, AppFrame.APP_HEIGHT);
+        setLayout(new BorderLayout());
 
-        // リザルト画面の上部パネル
-        JPanel resultUpperPanel = new JPanel();
+        // ResultPanelの上にresultTopPanel,resultBottomPanelを配置し
+        // その２枚のパネルの上に各コンポーネントを配置する
+        JPanel resultTopPanel = new JPanel();
 
-        // リザルト画面の下部パネル
         JPanel resultBottomPanel = new JPanel();
         resultBottomPanel.setLayout(new FlowLayout());
 
-        // 実際の結果を表示するラベル
+        // クリアにかかった時間を表示するラベル
         resultLabel = new JLabel();
         resultLabel.setHorizontalAlignment(JLabel.CENTER);
 
@@ -36,11 +36,11 @@ public class ResultPanel extends JPanel implements ActionListener {
         randomPlayBtn.setActionCommand("REPLAY_RANDOMLY");
 
 
-        resultUpperPanel.add(resultLabel);
+        resultTopPanel.add(resultLabel);
         resultBottomPanel.add(replayBtn);
         resultBottomPanel.add(randomPlayBtn);
 
-        this.add(resultUpperPanel, BorderLayout.CENTER);
+        this.add(resultTopPanel, BorderLayout.CENTER);
         this.add(resultBottomPanel, BorderLayout.SOUTH);
     }
 
