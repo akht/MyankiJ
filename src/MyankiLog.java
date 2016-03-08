@@ -71,7 +71,7 @@ public class MyankiLog {
     // 全て上書きする方法を採る
     public void refresh(File logFile) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(logFile));
-            PrintWriter pw = new PrintWriter(bw)) {
+             PrintWriter pw = new PrintWriter(bw)) {
             for (String line : logList) {
                 pw.write(line + "\n");
             }
