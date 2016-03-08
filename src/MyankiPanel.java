@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class MyankiPanel extends JPanel implements ActionListener {
     private AppFrame appFrame;
+    private Timer timer;
 
     public JLabel howManyTimesLabel;
     public JLabel countLabel;
@@ -44,19 +45,18 @@ public class MyankiPanel extends JPanel implements ActionListener {
         countLabel = new JLabel("1/10");
 
         // 問題文用のラベル
-        questionLabel = new JLabel("this is a question label");
+        questionLabel = new JLabel();
         questionLabel.setOpaque(true);
+        questionLabel.setFont(new Font("sanserif", Font.PLAIN, 13));
         questionLabel.setBackground(new Color(250, 250, 255));
         questionLabel.setPreferredSize(new Dimension(getWidth(), 80));
         questionLabel.setHorizontalAlignment(JLabel.CENTER);
         // クリックしている間だけ答えを表示させるためのリスナ
         questionLabel.addMouseListener(new MyMouseListener());
-
-
+        
         // ユーザーが入力するテキストフィールド
         inputField = new JTextField();
-        Font font = new Font("sanserif", Font.PLAIN, 16);
-        inputField.setFont(font);
+        inputField.setFont(new Font("sanserif", Font.PLAIN, 16));
         inputField.setCaretColor(Color.GRAY);
         inputField.addActionListener(this);
         inputField.setActionCommand("RETURN");
@@ -82,6 +82,30 @@ public class MyankiPanel extends JPanel implements ActionListener {
         this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    // 入力が正解だと示す
+    private void correctResponse() {
+        questionLabel.setBackground(new Color(153 ,207 ,255));
+    }
+
+    // 入力が不正解だと示す
+    private void incorrectResponse() {
+        questionLabel.setBackground(new Color(255 ,179 ,193));
+    }
+
+    // Timerを使用してアクションリスナの実行を150ms遅らせる
+    // その間に、正誤判定に応じたレスポンスを返す
+    private void checkEvent() {
+        if (appFrame.game.checkAnswer()) {
+            correctResponse();
+            timer = new Timer(150, new TimerListener("next"));
+            timer.start();
+        } else {
+            incorrectResponse();
+            timer = new Timer(150, new TimerListener("stay"));
+            timer.start();
+            inputField.selectAll();
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -99,13 +123,27 @@ public class MyankiPanel extends JPanel implements ActionListener {
             appFrame.game.nextQuestion();
         }
 
-        // テキストフィールド(inputField)で
-        // リターンキーが入力されたら正誤判定
         if (e.getActionCommand().equals("RETURN")) {
-            if (appFrame.game.checkAnswer()) {
+            checkEvent();
+        }
+    }
+
+    // Timerによって発生が150ms遅れる
+    private class TimerListener implements ActionListener {
+        String action;
+
+        public TimerListener(String action) {
+            this.action = action;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer.stop();
+            questionLabel.setFont(new Font("sanserif", Font.PLAIN, 13));
+            questionLabel.setBackground(new Color(250, 250, 255));
+
+            if (action.equals("next")) {
                 appFrame.game.nextQuestion();
-            } else {
-                inputField.selectAll();
             }
         }
     }
@@ -121,5 +159,4 @@ public class MyankiPanel extends JPanel implements ActionListener {
             questionLabel.setText(appFrame.game.sentenceList.getElem(appFrame.game.index)[0]);
         }
     }
-
 }
