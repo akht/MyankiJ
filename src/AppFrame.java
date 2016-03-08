@@ -20,7 +20,7 @@ public class AppFrame extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("Test AppFrame");
+        setTitle("Myanki");
         setSize(APP_WIDTH, APP_HEIGHT);
         setLocationRelativeTo(null);
         addWindowListener(new MyWindowListener());
