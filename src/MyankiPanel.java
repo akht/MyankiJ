@@ -34,7 +34,6 @@ public class MyankiPanel extends JPanel implements ActionListener {
 
         // この問題ファイルが何回目かを表示するラベル
         howManyTimesLabel = new JLabel("22");
-        howManyTimesLabel.setHorizontalAlignment(JLabel.LEFT);
 
         // 今やっている問題ファイルをエディタで開くボタン
         JButton editBtn = new JButton("edit");
@@ -43,7 +42,6 @@ public class MyankiPanel extends JPanel implements ActionListener {
 
         // 今何問目かを表示するラベル
         countLabel = new JLabel("1/10");
-        countLabel.setHorizontalAlignment(JLabel.RIGHT);
 
         // 問題文用のラベル
         questionLabel = new JLabel("this is a question label");
