@@ -35,7 +35,7 @@ public class EnglishSentence {
     // TODO: Step3の動作を変える。丸括弧の中身と直前の単語のどちらでも正解と判定できるように
     private String formatString(String targetString) {
         // Step1, Step2
-        String returnStr = removePeriod(targetString).toLowerCase();
+        String returnStr = removePeriodAtEnd(targetString).toLowerCase();
 
         // Step3
         String pRegex = "\\(.*?\\)";
@@ -90,7 +90,7 @@ public class EnglishSentence {
 
     // 受け取ったStringの末尾が.(ピリオド)で終わっていれば、
     // .(ピリオド)を削除して返す
-    private String removePeriod(String str) {
+    private String removePeriodAtEnd(String str) {
         if (str.endsWith(".")) {
             return str.substring(0, str.length() - 1);
         }
