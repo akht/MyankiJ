@@ -34,7 +34,7 @@ public class EnglishSentence {
     // Step5. 短縮形とその原形をREPLACED(n)という文字列に置き換える
     // Step6. 末尾に空白文字があれば空白文字を削除する
     // TODO: Step3の動作を変える。丸括弧の中身と直前の単語のどちらでも正解と判定できるように
-    private String formatString(String targetString) {
+    public String formatString(String targetString) {
         // Step1, Step2
         String returnStr = removePeriodAtEnd(targetString).toLowerCase();
 
