@@ -82,6 +82,16 @@ public class MyankiPanel extends JPanel implements ActionListener {
         this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    public void setMyankiText(Quiz quiz, int index, GameLog gameLog) {
+        String question = quiz.getQestion(index);
+        String count = String.valueOf(index + 1) + "/10";
+        String logText = gameLog.getCount(quiz.fileName);
+
+        howManyTimesLabel.setText("(" + logText + ")" + quiz.fileName);
+        countLabel.setText(count);
+        questionLabel.setText(question);
+    }
+
     // 入力が正解だと示す
     private void correctResponse() {
         questionLabel.setBackground(new Color(153 ,207 ,255));
@@ -90,6 +100,16 @@ public class MyankiPanel extends JPanel implements ActionListener {
     // 入力が不正解だと示す
     private void incorrectResponse() {
         questionLabel.setBackground(new Color(255 ,179 ,193));
+    }
+
+    private void openInEditor() {
+        File file = new File(appFrame.game.quiz.targetFile);
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.edit(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Timerを使用してアクションリスナの実行を150ms遅らせる
@@ -110,13 +130,7 @@ public class MyankiPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("OPEN_EDITOR")) {
-            File file = new File(appFrame.game.sentenceList.targetFile);
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.edit(file);
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
+            openInEditor();
         }
 
         if (e.getActionCommand().equals("SKIP")) {
@@ -151,12 +165,12 @@ public class MyankiPanel extends JPanel implements ActionListener {
     private class MyMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
-            questionLabel.setText(appFrame.game.sentenceList.getElem(appFrame.game.index)[1]);
+            questionLabel.setText(appFrame.game.quiz.getAnswer(appFrame.game.index));
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            questionLabel.setText(appFrame.game.sentenceList.getElem(appFrame.game.index)[0]);
+            questionLabel.setText(appFrame.game.quiz.getQestion(appFrame.game.index));
         }
     }
 }

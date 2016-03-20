@@ -4,27 +4,11 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EnglishSentence {
-    private static Map<String[], String> shortformsMap;
-    String sentence;
-
-    public EnglishSentence() {
-        // 省略表現と置換用文字列が入ったHashMapを作る
-        String shortformsFile = "files/shortforms.txt";
-        shortformsMap = makeShortformsMap(shortformsFile);
-    }
-
-    // 短縮形を置き換えた後の文字列が等しいか調べる
-    public boolean isCorrect(EnglishSentence target) {
-        String correct = formatString(this.sentence);
-        String user = formatString(target.sentence);
-
-        return user.equals(correct);
-    }
+public class Util {
+    private Util() {}
 
     // 5つのステップでテキストを整形する
     // Step1. テキストの末尾がピリオド(.)なら、ピリオドを除去する
@@ -34,9 +18,10 @@ public class EnglishSentence {
     // Step5. 短縮形とその原形をREPLACED(n)という文字列に置き換える
     // Step6. 末尾に空白文字があれば空白文字を削除する
     // TODO: Step3の動作を変える。丸括弧の中身と直前の単語のどちらでも正解と判定できるように
-    public String formatString(String targetString) {
+    // FIXME: It is not などの場合、It's not と It isn'tがありうるが、どちらで判定されるかは運
+    public static String formatString(String str) {
         // Step1, Step2
-        String returnStr = removePeriodAtEnd(targetString).toLowerCase();
+        String returnStr = removePeriodAtEnd(str).toLowerCase();
 
         // Step3
         String pRegex = "\\(.*?\\)";
@@ -49,10 +34,11 @@ public class EnglishSentence {
         // Step5
         // HashMapのキー(配列になっている)から正規表現オブジェクトを作り、
         // それにマッチした部分をキーに対応する値(REPLACED(n))に置換する
-        for (Entry<String[], String> entry : shortformsMap.entrySet()) {
+        String shortformsFile = "files/shortforms.txt";
+        Map<String[], String> shortforms = makeShortformsMap(shortformsFile);
+        for (Map.Entry<String[], String> entry : shortforms.entrySet()) {
             String[] key = entry.getKey();
             String value = entry.getValue();
-
             for (String shortf : key) {
                 Pattern p = Pattern.compile(shortf);
                 Matcher m = p.matcher(returnStr);
@@ -61,7 +47,6 @@ public class EnglishSentence {
                 }
             }
         }
-
         // Step6
         return returnStr.trim();
     }
@@ -70,13 +55,12 @@ public class EnglishSentence {
     // shortformsMapは次のような構造になっている
     // key: ["It's", "It is"]
     // value: "REPLACED1"
-    private Map<String[], String> makeShortformsMap(String filename) {
+    public static Map<String[], String> makeShortformsMap(String filename) {
         Map<String[], String> map = new HashMap<>();
-
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line = br.readLine();
             while (line != null) {
-                for (int i = 0; i < countLines(filename); i++) {
+                for (int i = 0; i < Util.countLines(filename); i++) {
                     String[] key = line.split("\t");
                     String value = "REPLACED" + i;
                     map.put(key, value);
@@ -86,22 +70,21 @@ public class EnglishSentence {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return map;
     }
 
+
     // 受け取ったStringの末尾が.(ピリオド)で終わっていれば、
     // .(ピリオド)を削除して返す
-    private String removePeriodAtEnd(String str) {
+    public static String removePeriodAtEnd(String str) {
         if (str.endsWith(".")) {
             return str.substring(0, str.length() - 1);
         }
-
         return str;
     }
 
     // テキストファイルの行数を返す
-    private static int countLines(String filename) {
+    public static int countLines(String filename) {
         int counts = 0;
         try (LineNumberReader lnr = new LineNumberReader(new FileReader(filename))) {
             lnr.skip(Integer.MAX_VALUE);
@@ -109,7 +92,6 @@ public class EnglishSentence {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return counts;
     }
 }

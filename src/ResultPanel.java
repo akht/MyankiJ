@@ -44,6 +44,10 @@ public class ResultPanel extends JPanel implements ActionListener {
         this.add(resultBottomPanel, BorderLayout.SOUTH);
     }
 
+    public void setResultText(String duration) {
+        resultLabel.setText(duration + "秒でクリアしました");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("REPLAY")) {
