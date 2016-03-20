@@ -7,14 +7,13 @@ public class Game {
 
     private String logPath = "files/myankilog.txt";
     private File logFile;
-    private MyankiLog log;
+    public GameLog gameLog;
 
     private long start;
     private long end;
 
     public int index = 0;
-    public SentenceList sentenceList;
-
+    public Quiz quiz;
 
     public Game(AppFrame appFrame) {
         this.appFrame = appFrame;
@@ -25,64 +24,47 @@ public class Game {
 
     // sentenceListとログの生成
     private void initGame() {
-        sentenceList = new SentenceList();
+        quiz = new Quiz();
         logFile = new File(logPath);
-        log = new MyankiLog(logFile);
-        setMyankiText();
+        gameLog = new GameLog(logFile);
+        myankiPanel.setMyankiText(quiz, index, gameLog);
     }
 
     public void replay() {
         index = 0;
-        setMyankiText();
+        myankiPanel.setMyankiText(quiz, index, gameLog);
         startClock();
         appFrame.toMyankiPanel();
     }
 
     public void replayRandomly() {
         index = 0;
-        sentenceList.makeSentenceListAgain();
-        setMyankiText();
+        quiz.makeQuizListAgain();
+        myankiPanel.setMyankiText(quiz, index, gameLog);
         startClock();
         appFrame.toMyankiPanel();
     }
 
     // 正誤判定
     public boolean checkAnswer() {
-        EnglishSentence correct = new EnglishSentence();
-        EnglishSentence user = new EnglishSentence();
-        correct.sentence = sentenceList.getElem(index)[1];
-        user.sentence = myankiPanel.inputField.getText();
-
-        return user.isCorrect(correct);
+        String userInput = Util.formatString(myankiPanel.inputField.getText());
+        String correct = Util.formatString(quiz.getAnswer(index));
+        return userInput.equals(correct);
     }
 
     public void nextQuestion() {
         index++;
         if (index < 10) {
-            setMyankiText();
+            myankiPanel.setMyankiText(quiz, index, gameLog);
             myankiPanel.inputField.setText("");
             myankiPanel.inputField.requestFocus();
         } else {
             stopClock();
-            log.update(sentenceList.fileName);
+            gameLog.update(quiz.fileName);
             myankiPanel.inputField.setText("");
-            setResultText();
+            resultPanel.setResultText(duration());
             appFrame.toResultPanel();
         }
-    }
-
-    public void setMyankiText() {
-        String question = sentenceList.getElem(index)[0];
-        String count = String.valueOf(index + 1) + "/10";
-        String logText = log.getCount(sentenceList.fileName);
-
-        myankiPanel.howManyTimesLabel.setText("(" + logText + ")" + sentenceList.fileName);
-        myankiPanel.countLabel.setText(count);
-        myankiPanel.questionLabel.setText(question);
-    }
-
-    public void setResultText() {
-        resultPanel.resultLabel.setText(duration() + "秒でクリアしました");
     }
 
     public void startClock() {
@@ -98,6 +80,6 @@ public class Game {
     }
 
     public void refreshLog() {
-        log.refresh(logFile);
+        gameLog.refresh(logFile);
     }
 }
