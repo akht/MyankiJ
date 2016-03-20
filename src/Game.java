@@ -22,7 +22,7 @@ public class Game {
         initGame();
     }
 
-    // sentenceListとログの生成
+    // QuizとGameLogの生成
     private void initGame() {
         quiz = new Quiz();
         logFile = new File(logPath);
