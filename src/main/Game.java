@@ -49,9 +49,9 @@ public class Game {
 
     // 正誤判定
     public boolean checkAnswer() {
-        String userInput = Util.formatString(myankiPanel.inputField.getText());
-        String correct = Util.formatString(quiz.getAnswer(index));
-        return userInput.equals(correct);
+        Sentence correctAnswer = new Sentence(quiz.getAnswer(index));
+        Sentence userInput = new Sentence(myankiPanel.inputField.getText());
+        return userInput.nearlyEquals(correctAnswer);
     }
 
     public void nextQuestion() {
