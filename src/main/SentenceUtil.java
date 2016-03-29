@@ -51,7 +51,7 @@ public final class SentenceUtil {
                         if (sfMap.containsKey(key)) {
                             String[] longforms = sfMap.get(key);
                             for (String longform : longforms) {
-                                elems[i] = longform;
+                                elems[j] = longform;
                                 list.add(String.join(" ", elems));
                             }
                             break;
