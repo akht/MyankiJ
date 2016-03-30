@@ -27,7 +27,7 @@ public class SentenceUtilTest {
                     "she has tall just like he is",
                     "she has tall just like he has"
             };
-            List<String> expected = new ArrayList<>(Arrays.asList(array));
+            List<String> expected = Arrays.asList(array);
 
             // リスト内の要素の順番を無視してactual.equals(expected)が成り立つかを調べる
             // expectedの全要素でactual.removeでき、かつその後actualが空のリストになっていれば
@@ -70,7 +70,7 @@ public class SentenceUtilTest {
                     "it is fine today",
                     "this is not a pen"
             };
-            List<String> list = new ArrayList<>(Arrays.asList(array));
+            List<String> list = Arrays.asList(array);
 
             assertThat(SentenceUtil.findShortformIn(list), is(true));
         }
@@ -82,7 +82,7 @@ public class SentenceUtilTest {
                     "this is a pen",
                     "he is not a pen"
             };
-            List<String> list = new ArrayList<>(Arrays.asList(array));
+            List<String> list = Arrays.asList(array);
 
             assertThat(SentenceUtil.findShortformIn(list), is(false));
         }
