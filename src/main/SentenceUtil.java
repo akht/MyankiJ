@@ -43,20 +43,18 @@ public final class SentenceUtil {
         while (findShortformIn(list)) {
             for (int i = 0; i < list.size(); i++) {
                 String listItem = list.get(i);
-                if (findShortformIn(listItem)) {
-                    list.remove(i);
-                    String[] elems = listItem.split(" ");
-                    for (int j = 0; j < elems.length; j++) {
-                        String key = elems[j];
-                        if (sfMap.containsKey(key)) {
-                            String[] longforms = sfMap.get(key);
-                            for (String longform : longforms) {
-                                elems[j] = longform;
-                                list.add(String.join(" ", elems));
-                            }
-                            break;
-                        }
+                if (!findShortformIn(listItem)) continue;
+                list.remove(i);
+                String[] elems = listItem.split(" ");
+                for (int j = 0; j < elems.length; j++) {
+                    String key = elems[j];
+                    if (!sfMap.containsKey(key)) continue;
+                    String[] longforms = sfMap.get(key);
+                    for (String longform : longforms) {
+                        elems[j] = longform;
+                        list.add(String.join(" ", elems));
                     }
+                    break;
                 }
             }
         }
