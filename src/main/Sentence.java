@@ -17,7 +17,7 @@ public class Sentence {
     // Utilクラスのメソッドを使用し
     // 正誤判定に必要なList<String>を生成して返す
     public List<String> makeList(String str) {
-        // 末尾のピリオドを削除し、すべて小文字へ
+        // 末尾のドットを削除し、すべて小文字へ
         str = SentenceUtil.removeDotAtEnd(str).toLowerCase();
         // 丸括弧と丸括弧の中身を削除
         str = str.replaceAll("\\(.*?\\)", "");
@@ -27,8 +27,8 @@ public class Sentence {
         List<String> list = new ArrayList<>();
         list.add(str);
 
-        // str文字列中にアポストロフィがなければ短縮型は存在ない
-        // アポストロフィがあれば短縮型が存在する可能性がある
+        // str文字列中にアポストロフィがなければ短縮形は存在ない
+        // アポストロフィがあれば短縮形が存在する可能性がある
         if (str.contains("'")) {
             list = SentenceUtil.unfoldShortform(list);
         }

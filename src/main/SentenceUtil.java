@@ -11,22 +11,22 @@ public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
 
     static {
-        sfMap = makeShortformsMap("files/shortforms.csv");
+        sfMap = makeShortformsMap();
     }
 
     private SentenceUtil() {}
 
 
-    // 短縮型(I'm)に対してそれを開いたかたち(I am)を原型と呼ぶことにする
-    // 短縮型を原型になおすことを展開と呼ぶことにする
+    // 短縮形(I'm)に対してそれを開いたかたち(I am)を原形と呼ぶことにする
+    // 短縮形を原形になおすことを展開と呼ぶことにする
     //
-    // 引数listの中に短縮型を含む要素があればそれを展開した文字列をlistに格納し、
+    // 引数listの中に短縮形を含む要素があればそれを展開した文字列をlistに格納し、
     // 展開に使った要素を削除する
     // 例1) you're => you are
     // old: [ "you're so cute" ]
     // new: [ "you are so cute" ]
     //
-    // 原型が複数あるときは、すべての原型で文字列を作りlistに格納する
+    // 原形が複数あるときは、すべての原形で文字列を作りlistに格納する
     // 例2) it's => it is, it has
     // old: [ "it's fine today" ]
     // new: [ "it is fine today",
@@ -93,7 +93,8 @@ public final class SentenceUtil {
     // 例)
     // key: she's
     // value: {she is, she has}
-    public static Map<String, String[]> makeShortformsMap(String filename) {
+    private static Map<String, String[]> makeShortformsMap() {
+        String filename = "files/shortforms.csv";
         Map<String, String[]> map = new LinkedHashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line = br.readLine();
@@ -110,8 +111,8 @@ public final class SentenceUtil {
         return map;
     }
 
-    // 受け取ったStringの末尾が.(ピリオド)で終わっていれば、
-    // .(ピリオド)を削除して返す
+    // 受け取ったStringの末尾が.(ドット)で終わっていれば、
+    // .(ドット)を削除して返す
     public static String removeDotAtEnd(String str) {
         if (str.endsWith(".")) {
             return str.substring(0, str.length() - 1);
