@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
-public class MyankiPanel extends JPanel implements ActionListener {
+public class MyankiPanel extends JPanel {
     private AppFrame appFrame;
     private Timer timer;
 
@@ -40,8 +40,7 @@ public class MyankiPanel extends JPanel implements ActionListener {
 
         // 今やっている問題ファイルをエディタで開くボタン
         JButton editBtn = new JButton("edit");
-        editBtn.addActionListener(this);
-        editBtn.setActionCommand("OPEN_EDITOR");
+        editBtn.addActionListener(e -> openInEditor());
 
         // 今何問目かを表示するラベル
         countLabel = new JLabel("1/10");
@@ -60,16 +59,14 @@ public class MyankiPanel extends JPanel implements ActionListener {
         inputField = new JTextField();
         inputField.setFont(new Font("sanserif", Font.PLAIN, 16));
         inputField.setCaretColor(Color.GRAY);
-        inputField.addActionListener(this);
-        inputField.setActionCommand("RETURN");
+        inputField.addActionListener(e -> checkEvent());
         inputField.setPreferredSize(new Dimension(500, 45));
         inputField.setHorizontalAlignment(JTextField.CENTER);
 
         // 次へボタン
         JButton nextBtn = new JButton();
         nextBtn.setText("skip");
-        nextBtn.addActionListener(this);
-        nextBtn.setActionCommand("SKIP");
+        nextBtn.addActionListener(e -> appFrame.game.nextQuestion());
         nextBtn.setPreferredSize(new Dimension(45, 45));
 
         topPanel.add(howManyTimesLabel);
@@ -126,21 +123,6 @@ public class MyankiPanel extends JPanel implements ActionListener {
             timer = new Timer(150, new TimerListener("stay"));
             timer.start();
             inputField.selectAll();
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("OPEN_EDITOR")) {
-            openInEditor();
-        }
-
-        if (e.getActionCommand().equals("SKIP")) {
-            appFrame.game.nextQuestion();
-        }
-
-        if (e.getActionCommand().equals("RETURN")) {
-            checkEvent();
         }
     }
 
