@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ResultPanel extends JPanel implements ActionListener {
+public class ResultPanel extends JPanel {
     private AppFrame appFrame;
 
     public JLabel resultLabel;
@@ -29,13 +29,11 @@ public class ResultPanel extends JPanel implements ActionListener {
 
         // 同じ問題をもう一度
         JButton replayBtn = new JButton("同じ問題");
-        replayBtn.addActionListener(this);
-        replayBtn.setActionCommand("REPLAY");
+        replayBtn.addActionListener(e -> appFrame.game.replay());
 
         // 違う問題へ
         JButton randomPlayBtn = new JButton("違う問題");
-        randomPlayBtn.addActionListener(this);
-        randomPlayBtn.setActionCommand("REPLAY_RANDOMLY");
+        randomPlayBtn.addActionListener(e -> appFrame.game.replayRandomly());
 
 
         resultTopPanel.add(resultLabel);
@@ -50,14 +48,4 @@ public class ResultPanel extends JPanel implements ActionListener {
         resultLabel.setText(duration + "秒でクリアしました");
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("REPLAY")) {
-            appFrame.game.replay();
-        }
-
-        if (e.getActionCommand().equals("REPLAY_RANDOMLY")) {
-            appFrame.game.replayRandomly();
-        }
-    }
 }
