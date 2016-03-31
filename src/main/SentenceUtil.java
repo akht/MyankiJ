@@ -3,9 +3,7 @@ package main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
@@ -40,25 +38,33 @@ public final class SentenceUtil {
     //        "she has tall just like he is",
     //        "she has tall just like he has" ]
     public static List<String> unfoldShortform(List<String> list) {
-        while (findShortformIn(list)) {
-            for (int i = 0; i < list.size(); i++) {
-                String listItem = list.get(i);
-                if (!findShortformIn(listItem)) continue;
-                list.remove(i);
-                String[] elems = listItem.split(" ");
-                for (int j = 0; j < elems.length; j++) {
-                    String key = elems[j];
-                    if (!sfMap.containsKey(key)) continue;
-                    String[] longforms = sfMap.get(key);
-                    for (String longform : longforms) {
-                        elems[j] = longform;
-                        list.add(String.join(" ", elems));
-                    }
-                    break;
-                }
-            }
+        if (!findShortformIn(list)) return list;
+
+        String listItem = "";
+        for (String s : list) {
+            if (!findShortformIn(s)) continue;
+            listItem = s;
+            break;
         }
-        return list;
+
+        list.remove(listItem);
+        List<String> elems = new ArrayList<>(Arrays.asList(listItem.split(" ")));
+        String key = "";
+
+        for (String s : elems) {
+            if (!findShortformIn(s)) continue;
+            key = s;
+            break;
+        }
+
+        String[] longforms = sfMap.get(key);
+        int index = elems.indexOf(key);
+        for (String longform : longforms) {
+            elems.set(index, longform);
+            list.add(String.join(" ", elems));
+        }
+
+        return unfoldShortform(list);
     }
 
     // List<String>の要素の中に短縮形があればtrueを、なければfalseを返す
