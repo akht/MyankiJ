@@ -21,6 +21,8 @@ public class Sentence {
         str = SentenceUtil.removeDotAtEnd(str).toLowerCase();
         // 丸括弧と丸括弧の中身を削除
         str = str.replaceAll("\\(.*?\\)", "");
+        // ハイフンの前後に空白を追加
+        str = str.replace("-", " - ");
         // 連続する空白をひとつの空白になおす
         str = str.replaceAll("\\s{2,}", " ");
 
