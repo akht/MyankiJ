@@ -17,15 +17,7 @@ public class Sentence {
     // Utilクラスのメソッドを使用し
     // 正誤判定に必要なList<String>を生成して返す
     public List<String> makeList(String str) {
-        // 末尾のドットを削除し、すべて小文字へ
-        str = SentenceUtil.removeDotAtEnd(str).toLowerCase();
-        // 丸括弧と丸括弧の中身を削除
-        str = str.replaceAll("\\(.*?\\)", "");
-        // ハイフンの前後に空白を追加
-        str = str.replaceAll("\\-", " - ");
-        // 連続する空白をひとつの空白になおす
-        str = str.replaceAll("\\s{2,}", " ");
-
+        str = SentenceUtil.format(str);
         List<String> list = new ArrayList<>();
         list.add(str);
 

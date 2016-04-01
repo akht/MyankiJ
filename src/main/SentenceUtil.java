@@ -14,6 +14,20 @@ public final class SentenceUtil {
 
     private SentenceUtil() {}
 
+    public static String format(String str) {
+        // 末尾のドットを削除し、すべて小文字へ
+        str = SentenceUtil.removeDotAtEnd(str).toLowerCase();
+
+        // 丸括弧と丸括弧の中身を削除
+        str = str.replaceAll("\\(.*?\\)", "");
+
+        // ハイフンの前後に空白を追加
+        str = str.replaceAll("\\-", " - ");
+
+        // 連続する空白をひとつの空白になおす
+        str = str.replaceAll("\\s{2,}", " ");
+        return str;
+    }
 
     // 短縮形(I'm)に対してそれを開いたかたち(I am)を原形と呼ぶことにする
     // 短縮形を原形になおすことを展開と呼ぶことにする
