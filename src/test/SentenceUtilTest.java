@@ -13,6 +13,17 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class SentenceUtilTest {
 
+    public static class testFormat {
+
+        @Test
+        public void テキストは整形される() {
+            String str = "IS THIS (parenthesis) A  TEST  STRING?-YES, IT IS.";
+            String expected = "is this a test string? - yes, it is";
+
+            assertThat(SentenceUtil.format(str), is(expected));
+        }
+    }
+
     public static class testUnfoldShortform {
 
         @Test
