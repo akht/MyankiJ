@@ -79,28 +79,17 @@ public final class SentenceUtil {
 
     // List<String>の要素の中に短縮形があればtrueを、なければfalseを返す
     public static boolean findShortformIn(List<String> list) {
-        for (String s : list) {
-            if (findShortformIn(s)) {
-                return true;
-            }
-        }
-        return false;
+        return list.stream()
+                .anyMatch(SentenceUtil::findShortformIn);
     }
 
     // 文字列中に短縮形があればtrueを、なければfalseを返す
     public static boolean findShortformIn(String str) {
         // 文字列中にアポストロフィがなければ短縮形もない
-        if (!str.contains("'")) {
-            return false;
-        }
+        if (!str.contains("'")) return false;
 
-        String[] strings = str.split(" ");
-        for (String key : strings) {
-            if (sfMap.containsKey(key)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.asList(str.split(" ")).stream()
+                .anyMatch(sfMap::containsKey);
     }
 
     // shortforms.csvからshortformsMapを作る
