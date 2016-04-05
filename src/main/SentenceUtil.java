@@ -54,29 +54,25 @@ public final class SentenceUtil {
     public static List<String> unfoldShortform(List<String> list) {
         if (!findShortformIn(list)) return list;
 
-        String listItem = "";
-        for (String s : list) {
-            if (!findShortformIn(s)) continue;
-            listItem = s;
-            break;
-        }
+        String listItem = list.stream()
+                .filter(Dev::findShortformIn)
+                .findFirst()
+                .orElse("");
 
         list.remove(listItem);
-        List<String> elems = new ArrayList<>(Arrays.asList(listItem.split(" ")));
-        String key = "";
-
-        for (String s : elems) {
-            if (!findShortformIn(s)) continue;
-            key = s;
-            break;
-        }
+        List<String> elems = Arrays.asList(listItem.split(" "));
+        String key = elems.stream()
+                .filter(Dev::findShortformIn)
+                .findFirst()
+                .orElse("");
 
         String[] longforms = sfMap.get(key);
         int index = elems.indexOf(key);
-        for (String longform : longforms) {
-            elems.set(index, longform);
-            list.add(String.join(" ", elems));
-        }
+        Arrays.stream(longforms)
+                .forEach(s -> {
+                    elems.set(index, s);
+                    list.add(String.join(" ", elems));
+                });
 
         return unfoldShortform(list);
     }
