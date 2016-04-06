@@ -103,8 +103,8 @@ public final class SentenceUtil {
             String line = br.readLine();
             while (line != null) {
                 String[] array = line.split(",");
-                String[] value = new String[array.length - 1];
-                System.arraycopy(array, 1, value, 0, array.length - 1);
+                // array配列の最初の要素以外をvalue配列にコピーする
+                String[] value = Arrays.copyOfRange(array, 1, array.length);
                 map.put(array[0], value);
                 line = br.readLine();
             }
