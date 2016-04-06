@@ -1,9 +1,15 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
@@ -90,9 +96,9 @@ public final class SentenceUtil {
     // key: she's
     // value: {she is, she has}
     private static Map<String, String[]> makeShortformsMap() {
-        String filename = "files/shortforms.csv";
         Map<String, String[]> map = new LinkedHashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        Path path = Paths.get("files/shortforms.csv");
+        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line = br.readLine();
             while (line != null) {
                 String[] array = line.split(",");

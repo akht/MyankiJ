@@ -1,6 +1,10 @@
 package main;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,13 +16,14 @@ import java.util.regex.Pattern;
 // TODO: まとも化
 public class GameLog extends ArrayList<String> {
 
-    public GameLog(File logFile) {
+    public GameLog(String logFile) {
         makeLogList(logFile);
     }
 
     // myankilog.txtの中身をそのままArrayListに格納
-    public void makeLogList(File logFile) {
-        try (BufferedReader br = new BufferedReader(new FileReader(logFile))) {
+    public void makeLogList(String logFile) {
+        Path path = Paths.get(logFile);
+        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line = br.readLine();
             while (line != null) {
                 this.add(line);
@@ -67,8 +72,9 @@ public class GameLog extends ArrayList<String> {
     }
 
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
-    public void refresh(File logFile) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(logFile));
+    public void refresh(String logFile) {
+        Path path = Paths.get(logFile);
+        try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8);
              PrintWriter pw = new PrintWriter(bw)) {
             for (String line : this) {
                 pw.write(line + "\n");
