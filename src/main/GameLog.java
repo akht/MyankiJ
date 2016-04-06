@@ -74,10 +74,9 @@ public class GameLog extends ArrayList<String> {
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
     public void refresh(String logFile) {
         Path path = Paths.get(logFile);
-        try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8);
-             PrintWriter pw = new PrintWriter(bw)) {
+        try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             for (String line : this) {
-                pw.write(line + "\n");
+                bw.write(line + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
