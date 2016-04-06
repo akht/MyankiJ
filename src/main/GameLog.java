@@ -1,13 +1,14 @@
 package main;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 // ログはファイルネームに依存している。
 // 現状のファイルネームは1.txt、2.txt、となっている。
@@ -22,13 +23,8 @@ public class GameLog extends ArrayList<String> {
 
     // myankilog.txtの中身をそのままArrayListに格納
     public void makeLogList(String logFile) {
-        Path path = Paths.get(logFile);
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line = br.readLine();
-            while (line != null) {
-                this.add(line);
-                line = br.readLine();
-            }
+        try (Stream<String> stream = Files.lines(Paths.get(logFile), StandardCharsets.UTF_8)) {
+            stream.forEach(this::add);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,8 +69,7 @@ public class GameLog extends ArrayList<String> {
 
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
     public void refresh(String logFile) {
-        Path path = Paths.get(logFile);
-        try (BufferedWriter bw = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(logFile), StandardCharsets.UTF_8)) {
             for (String line : this) {
                 bw.write(line + "\n");
             }

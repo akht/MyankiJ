@@ -1,6 +1,5 @@
 package main;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -10,6 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
@@ -98,15 +98,13 @@ public final class SentenceUtil {
     private static Map<String, String[]> makeShortformsMap() {
         Map<String, String[]> map = new LinkedHashMap<>();
         Path path = Paths.get("files/shortforms.csv");
-        try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line = br.readLine();
-            while (line != null) {
-                String[] array = line.split(",");
+        try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
+            stream.forEach(line -> {
+                String[] arr = line.split(",");
                 // array配列の最初の要素以外をvalue配列にコピーする
-                String[] value = Arrays.copyOfRange(array, 1, array.length);
-                map.put(array[0], value);
-                line = br.readLine();
-            }
+                String[] value = Arrays.copyOfRange(arr, 1, arr.length);
+                map.put(arr[0], value);
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
