@@ -1,14 +1,11 @@
 package main;
 
-import java.io.File;
-
 public class Game {
     private AppFrame appFrame;
     private MyankiPanel myankiPanel;
     private ResultPanel resultPanel;
 
-    private String logPath = "files/myankilog.txt";
-    private File logFile;
+    private String logFile = "files/myankilog.txt";
     public GameLog gameLog;
 
     private long start;
@@ -27,7 +24,6 @@ public class Game {
     // QuizとGameLogの生成
     private void initGame() {
         quiz = new Quiz();
-        logFile = new File(logPath);
         gameLog = new GameLog(logFile);
         myankiPanel.setMyankiText(quiz, index, gameLog);
     }

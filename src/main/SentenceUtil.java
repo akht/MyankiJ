@@ -1,9 +1,15 @@
 package main;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
@@ -15,18 +21,11 @@ public final class SentenceUtil {
     private SentenceUtil() {}
 
     public static String format(String str) {
-        // 末尾のドットを削除し、すべて小文字へ
-        str = SentenceUtil.removeDotAtEnd(str).toLowerCase();
-
-        // 丸括弧と丸括弧の中身を削除
-        str = str.replaceAll("\\(.*?\\)", "");
-
-        // ハイフンの前後に空白を追加
-        str = str.replaceAll("\\-", " - ");
-
-        // 連続する空白をひとつの空白になおす
-        str = str.replaceAll("\\s{2,}", " ");
-        return str;
+        return SentenceUtil.removeDotAtEnd(str) // 末尾のドットを削除
+                .toLowerCase()                  // 小文字へ
+                .replaceAll("\\(.*?\\)", "")    // 丸括弧と丸括弧の中身を削除
+                .replaceAll("\\-", " - ")       // ハイフンの前後に空白を追加
+                .replaceAll("\\s{2,}", " ");    // 連続する空白をひとつの空白に
     }
 
     // 短縮形(I'm)に対してそれを開いたかたち(I am)を原形と呼ぶことにする
@@ -54,57 +53,42 @@ public final class SentenceUtil {
     public static List<String> unfoldShortform(List<String> list) {
         if (!findShortformIn(list)) return list;
 
-        String listItem = "";
-        for (String s : list) {
-            if (!findShortformIn(s)) continue;
-            listItem = s;
-            break;
-        }
+        String listItem = list.stream()
+                .filter(Dev::findShortformIn)
+                .findFirst()
+                .orElse("");
 
         list.remove(listItem);
-        List<String> elems = new ArrayList<>(Arrays.asList(listItem.split(" ")));
-        String key = "";
-
-        for (String s : elems) {
-            if (!findShortformIn(s)) continue;
-            key = s;
-            break;
-        }
+        List<String> elems = Arrays.asList(listItem.split(" "));
+        String key = elems.stream()
+                .filter(Dev::findShortformIn)
+                .findFirst()
+                .orElse("");
 
         String[] longforms = sfMap.get(key);
         int index = elems.indexOf(key);
-        for (String longform : longforms) {
-            elems.set(index, longform);
-            list.add(String.join(" ", elems));
-        }
+        Arrays.stream(longforms)
+                .forEach(s -> {
+                    elems.set(index, s);
+                    list.add(String.join(" ", elems));
+                });
 
         return unfoldShortform(list);
     }
 
     // List<String>の要素の中に短縮形があればtrueを、なければfalseを返す
     public static boolean findShortformIn(List<String> list) {
-        for (String s : list) {
-            if (findShortformIn(s)) {
-                return true;
-            }
-        }
-        return false;
+        return list.stream()
+                .anyMatch(SentenceUtil::findShortformIn);
     }
 
     // 文字列中に短縮形があればtrueを、なければfalseを返す
     public static boolean findShortformIn(String str) {
         // 文字列中にアポストロフィがなければ短縮形もない
-        if (!str.contains("'")) {
-            return false;
-        }
+        if (!str.contains("'")) return false;
 
-        String[] strings = str.split(" ");
-        for (String key : strings) {
-            if (sfMap.containsKey(key)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.asList(str.split(" ")).stream()
+                .anyMatch(sfMap::containsKey);
     }
 
     // shortforms.csvからshortformsMapを作る
@@ -112,17 +96,15 @@ public final class SentenceUtil {
     // key: she's
     // value: {she is, she has}
     private static Map<String, String[]> makeShortformsMap() {
-        String filename = "files/shortforms.csv";
         Map<String, String[]> map = new LinkedHashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line = br.readLine();
-            while (line != null) {
-                String[] array = line.split(",");
-                String[] value = new String[array.length - 1];
-                System.arraycopy(array, 1, value, 0, array.length - 1);
-                map.put(array[0], value);
-                line = br.readLine();
-            }
+        Path path = Paths.get("files/shortforms.csv");
+        try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
+            stream.forEach(line -> {
+                String[] arr = line.split(",");
+                // array配列の最初の要素以外をvalue配列にコピーする
+                String[] value = Arrays.copyOfRange(arr, 1, arr.length);
+                map.put(arr[0], value);
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

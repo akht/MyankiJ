@@ -1,12 +1,14 @@
 package main;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Quiz {
     private List<String[]> list;
@@ -47,12 +49,8 @@ public class Quiz {
     // ([日,英], [日,英], [日,英], ...)となっている
     public List<String[]> makeQuizList(String targetFile) {
         List<String[]> list = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(targetFile))) {
-            String line = br.readLine();
-            while (line != null) {
-                list.add(line.split("\t"));
-                line = br.readLine();
-            }
+        try (Stream<String> stream = Files.lines(Paths.get(targetFile), StandardCharsets.UTF_8)) {
+            stream.forEach(line -> list.add(line.split("\t")));
         } catch (IOException e) {
             e.printStackTrace();
         }

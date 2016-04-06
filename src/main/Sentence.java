@@ -32,11 +32,7 @@ public class Sentence {
     // 自分自身のlistと、引数sentenceのlistに
     // ひとつでも共通する要素があればtrueを返す
     public boolean nearlyEquals(Sentence sentence) {
-        for (String s : this.getList()) {
-            if (sentence.getList().contains(s)) {
-                return true;
-            }
-        }
-        return false;
+        return this.getList().stream()
+                .anyMatch(sentence.getList()::contains);
     }
 }
