@@ -54,14 +54,14 @@ public final class SentenceUtil {
         if (!findShortformIn(list)) return list;
 
         String listItem = list.stream()
-                .filter(Dev::findShortformIn)
+                .filter(s -> findShortformIn(s))
                 .findFirst()
                 .orElse("");
 
         list.remove(listItem);
         List<String> elems = Arrays.asList(listItem.split(" "));
         String key = elems.stream()
-                .filter(Dev::findShortformIn)
+                .filter(s -> findShortformIn(s))
                 .findFirst()
                 .orElse("");
 
