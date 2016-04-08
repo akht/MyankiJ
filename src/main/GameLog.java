@@ -1,45 +1,70 @@
 package main;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-// ログはファイルネームに依存している。
-// 現状のファイルネームは1.txt、2.txt、となっている。
-// ログはこの[ファイル名-1]がインデックスになっているため
-// 現状では自由なファイル名には対応できない
-// TODO: まとも化
-public class GameLog extends ArrayList<String> {
+public class GameLog extends LinkedHashMap<String, String> {
 
     public GameLog(String logFile) {
-        makeLogList(logFile);
+        initGameLog(logFile);
+        searchNewFile("res/");
     }
 
-    // myankilog.txtの中身をそのままArrayListに格納
-    public void makeLogList(String logFile) {
+    public void initGameLog(String logFile) {
+        Path path = Paths.get(logFile);
+        // ログファイルが存在しなければ、ログファイルを作成
+        if (Files.notExists(path)) {
+            try {
+                Files.createFile(path, PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwxr-xr-x")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        makeLogMap(logFile);
+    }
+
+    // myankilog.txtの中身を自身(HashMap)に格納
+    // key: ファイル名(1列目)
+    // value: 回数(2列目)
+    public void makeLogMap(String logFile) {
         try (Stream<String> stream = Files.lines(Paths.get(logFile), StandardCharsets.UTF_8)) {
-            stream.forEach(this::add);
+            stream.map(line -> line.split(","))
+                    .forEach(a -> this.put(a[0], a[1]));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // この問題をやった回数を返す
-    public String getCount(String fileName) {
-        int index = toNumber(fileName) - 1;
+    // res/にあるファイルをすべて読み込んで、ログmapのキーに存在しないファイル名があれば
+    // ファイル名,0をログファイルに追加
+    public void searchNewFile(String dirPath) {
+        File dir = new File(dirPath);
+        List<String> files = Arrays.asList(dir.list());
+        files.stream()
+                .filter(s -> !this.containsKey(s))
+                .forEach(s -> this.put(s, "0"));
+    }
 
-        // 取り出した数字部分をインデックスにしログを取り出す
-        // ログの数値によって返す値を決める
+    // 指定された問題(ファイル名)をやった回数を返す
+    public String getCount(String fileName) {
         // 初めてのファイルならNew
         // 2~4回目なら✔︎✔︎✔︎✔︎(回数に応じた数)
         // 5~n回なら✔︎n
-        int count = Integer.parseInt(this.get(index));
+        int count = Integer.parseInt(this.get(fileName));
         if (count == 0) {
             return "New";
         } else if (count > 1 && count < 5) {
@@ -49,11 +74,10 @@ public class GameLog extends ArrayList<String> {
         }
     }
 
-    // ログを+1してアップデートし、logListを再生成する
+    // ログを+1してアップデートする
     public void update(String fileName) {
-        int index = toNumber(fileName) - 1;
-        int count = Integer.parseInt(this.get(index));
-        this.set(index, String.valueOf(++count));
+        int count = Integer.parseInt(this.get(fileName));
+        this.put(fileName, String.valueOf(++count));
     }
 
     // 正規表現を使ってファイル名から数字を取り出す
@@ -70,8 +94,8 @@ public class GameLog extends ArrayList<String> {
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
     public void refresh(String logFile) {
         try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(logFile), StandardCharsets.UTF_8)) {
-            for (String line : this) {
-                bw.write(line + "\n");
+            for (Map.Entry<String, String> entry : this.entrySet()) {
+                bw.write(entry.getKey() + "," + entry.getValue() + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
