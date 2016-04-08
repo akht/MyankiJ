@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class GameLog extends LinkedHashMap<String, String> {
@@ -78,17 +76,6 @@ public class GameLog extends LinkedHashMap<String, String> {
     public void update(String fileName) {
         int count = Integer.parseInt(this.get(fileName));
         this.put(fileName, String.valueOf(++count));
-    }
-
-    // 正規表現を使ってファイル名から数字を取り出す
-    public int toNumber(String fileName) {
-        Pattern p = Pattern.compile("([0-9]+)");
-        Matcher m = p.matcher(fileName);
-        int fileNumber = 0;
-        if (m.find()) {
-            fileNumber = Integer.parseInt(m.group());
-        }
-        return fileNumber;
     }
 
     // update()されたログをmyankilog.txtに書き込みリフレッシュする
