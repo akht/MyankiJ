@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
+// 解答文またはユーザーからの入力文を表すクラス
 public class Sentence {
     private List<String> list;
 

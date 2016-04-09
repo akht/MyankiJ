@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+// Sentenceクラスで使用するユーティリティメソッドをまとめたクラス
 public final class SentenceUtil {
     private static final Map<String, String[]> sfMap;
 

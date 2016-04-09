@@ -32,20 +32,20 @@ public class Quiz {
         return this.list.get(index)[1];
     }
 
-    // res/以下の全てのファイルのファイル名を配列に格納
+    // res/内の全てのファイルのファイル名を配列に格納
     public String[] makeFilelistInDir(String dirPath) {
         File dir = new File(dirPath);
         return dir.list();
     }
 
-    // res/からひとつランダムにファイルを選ぶ
+    // res/内のファイルをランダムにひとつ選び、パスを含めたファイル名を返す
     public String pickFileRandomly(String[] filelist) {
         int fileIndex = new Random().nextInt(filelist.length);
         fileName = filelist[fileIndex];
         return resPath + "/" + fileName;
     }
 
-    // 日本語と英文が入ったsentenceListを作成
+    // 日本語と英文が入ったArrayList<String[]>を作成
     // ([日,英], [日,英], [日,英], ...)となっている
     public List<String[]> makeQuizList(String targetFile) {
         List<String[]> list = new ArrayList<>();

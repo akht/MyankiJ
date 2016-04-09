@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
+// 問題、入力欄などを持つメインのパネル
 public class MyankiPanel extends JPanel {
     private AppFrame appFrame;
     private Timer timer;
@@ -101,6 +102,7 @@ public class MyankiPanel extends JPanel {
         questionLabel.setBackground(new Color(255 ,179 ,193));
     }
 
+    // 今やっている問題をテキストエディターで開く
     private void openInEditor() {
         File file = new File(appFrame.game.quiz.targetFile);
         Desktop desktop = Desktop.getDesktop();
@@ -126,7 +128,7 @@ public class MyankiPanel extends JPanel {
         }
     }
 
-    // Timerによって発生が150ms遅れる
+    // Timerによって発生を150ms遅延させる
     private class TimerListener implements ActionListener {
         String action;
 
@@ -146,6 +148,8 @@ public class MyankiPanel extends JPanel {
         }
     }
 
+    // questionLabelをマウスでクリックし続けている(mousePressed)間は、答えを表示する
+    // 離される(mouseReleased)と、元の表示に戻る
     private class MyMouseListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {

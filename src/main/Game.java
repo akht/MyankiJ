@@ -22,6 +22,7 @@ public class Game {
     }
 
     // QuizとGameLogの生成
+    // myankiPanelの各ラベルに値を設定
     private void initGame() {
         quiz = new Quiz();
         gameLog = new GameLog(logFile);

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// 起動後まず表示されるパネル
 public class WelcomePanel extends JPanel implements ActionListener {
 
     private AppFrame appFrame;

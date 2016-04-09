@@ -3,6 +3,7 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 
+// 結果を表示するパネル
 public class ResultPanel extends JPanel {
     private AppFrame appFrame;
 
