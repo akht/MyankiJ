@@ -29,40 +29,43 @@ public final class SentenceUtil {
                 .replaceAll("\\s{2,}", " ");    // 連続する空白をひとつの空白に
     }
 
-    // 短縮形(I'm)に対してそれを開いたかたち(I am)を原形と呼ぶことにする
-    // 短縮形を原形になおすことを展開と呼ぶことにする
+    // 短縮形を含む英文文字列を、短縮形を含まない英文文字列に変換するメソッド。
     //
-    // 引数listの中に短縮形を含む要素があればそれを展開した文字列をlistに格納し、
-    // 展開に使った要素を削除する
+    // 引数listの中に短縮形を含む要素があれば、
+    // その要素中の短縮形を元の形に置き換えた文字列を引数listに格納し、
+    // 元の短縮形を含んだ要素を引数listから削除する。
+    // ロジックの複雑化を避けるため、すべての短縮形を一度に処理することはせずに
+    // 最初に見つかった短縮形を元の形に置き換える処理を短縮形がなくなるまで再帰的に呼び出す。
+    //
     // 例1) you're => you are
-    // old: [ "you're so cute" ]
-    // new: [ "you are so cute" ]
+    // param:  [ "you're so cute" ]
+    // return: [ "you are so cute" ]
     //
     // 原形が複数あるときは、すべての原形で文字列を作りlistに格納する
     // 例2) it's => it is, it has
-    // old: [ "it's fine today" ]
-    // new: [ "it is fine today",
-    //        "it has fine today" ]
+    // param:  [ "it's fine today" ]
+    // return: [ "it is fine today",
+    //           "it has fine today" ]
     //
     // 例3) she's => she is, she has
     //      he's => he is, he has
-    // old: [ "she's tall just like he's" ]
-    // new: [ "she is tall just like he is",
-    //        "she is tall just like he has",
-    //        "she has tall just like he is",
-    //        "she has tall just like he has" ]
+    // param:  [ "she's tall just like he's" ]
+    // return: [ "she is tall just like he is",
+    //           "she is tall just like he has",
+    //           "she has tall just like he is",
+    //           "she has tall just like he has" ]
     public static List<String> unfoldShortform(List<String> list) {
         if (!findShortformIn(list)) return list;
 
         String listItem = list.stream()
-                .filter(s -> findShortformIn(s))
+                .filter(SentenceUtil::findShortformIn)
                 .findFirst()
                 .orElse("");
 
         list.remove(listItem);
         List<String> elems = Arrays.asList(listItem.split(" "));
         String key = elems.stream()
-                .filter(s -> findShortformIn(s))
+                .filter(SentenceUtil::findShortformIn)
                 .findFirst()
                 .orElse("");
 
