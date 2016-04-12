@@ -11,7 +11,7 @@ public class Game {
     private long start;
     private long end;
 
-    public int index = 0;
+    public int index;
     public Quiz quiz;
 
     public Game(AppFrame appFrame) {
@@ -26,22 +26,18 @@ public class Game {
     private void initGame() {
         quiz = new Quiz();
         gameLog = new GameLog(logFile);
-        myankiPanel.setMyankiText(quiz, index, gameLog);
     }
 
-    public void replay() {
+    public void play() {
         index = 0;
         myankiPanel.setMyankiText(quiz, index, gameLog);
-        startClock();
         appFrame.toMyankiPanel();
+        startClock();
     }
 
     public void replayRandomly() {
-        index = 0;
         quiz.makeQuizListAgain();
-        myankiPanel.setMyankiText(quiz, index, gameLog);
-        startClock();
-        appFrame.toMyankiPanel();
+        play();
     }
 
     // 正誤判定

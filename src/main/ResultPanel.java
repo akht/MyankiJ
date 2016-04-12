@@ -38,7 +38,7 @@ public class ResultPanel extends JPanel {
         JPanel panelForBtns = new JPanel();
         // 同じ問題をもう一度
         JButton replayBtn = new JButton("同じ問題");
-        replayBtn.addActionListener(e -> appFrame.game.replay());
+        replayBtn.addActionListener(e -> appFrame.game.play());
         panelForBtns.add(replayBtn);
 
         // 違う問題へ

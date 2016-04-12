@@ -2,11 +2,9 @@ package main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 // 起動後まず表示されるパネル
-public class WelcomePanel extends JPanel implements ActionListener {
+public class WelcomePanel extends JPanel {
 
     private AppFrame appFrame;
 
@@ -18,14 +16,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
 
         JButton startBtn = new JButton("Click to play");
         startBtn.setBorderPainted(false);
-        startBtn.addActionListener(this);
+        startBtn.addActionListener(e -> appFrame.game.play());
         this.add(startBtn, BorderLayout.CENTER);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        appFrame.toMyankiPanel();
-        appFrame.game.startClock();
-        appFrame.myankiPanel.inputField.requestFocus();
     }
 }
