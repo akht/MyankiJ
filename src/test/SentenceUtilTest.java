@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 public class SentenceUtilTest {
 
     public static class testFormat {
-
         @Test
         public void テキストは整形される() {
             String str = "IS THIS (parenthesis) A  TEST  STRING?-YES, IT IS.";
@@ -25,7 +24,6 @@ public class SentenceUtilTest {
     }
 
     public static class testUnfoldShortform {
-
         @Test
         public void 短縮形は元の形に展開される() {
             List<String> actual = new ArrayList<>();
@@ -73,7 +71,6 @@ public class SentenceUtilTest {
     }
 
     public static class testFindShortformIn {
-
         @Test
         public void 短縮形がある場合() {
             String[] array = {
@@ -100,7 +97,6 @@ public class SentenceUtilTest {
     }
 
     public static class testRemoveDotAtEnd {
-
         @Test
         public void 末尾のドットは削除される() {
             String str = "This sentence contains dot at the end.";
