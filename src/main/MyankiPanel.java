@@ -12,7 +12,8 @@ import java.io.IOException;
 // 問題、入力欄などを持つメインのパネル
 public class MyankiPanel extends JPanel {
     private AppFrame appFrame;
-    private Timer timer;
+    private Timer delayTimer;
+    private Timer blinkTimer;
 
     public JLabel howManyTimesLabel;
     public JLabel countLabel;
@@ -94,12 +95,35 @@ public class MyankiPanel extends JPanel {
 
     // 入力が正解だと示す
     private void correctResponse() {
-        questionLabel.setBackground(new Color(153 ,207 ,255));
+        final boolean[] state = new boolean[1];
+        blinkTimer = new Timer(75, e -> {
+            state[0] = !state[0];
+            if (state[0]) {
+                questionLabel.setBackground(new Color(152, 210, 253));
+            } else {
+                questionLabel.setBackground(new Color(216, 238,255));
+            }
+            repaint();
+        });
+        blinkTimer.setRepeats(true);
+        blinkTimer.setInitialDelay(0);
+        blinkTimer.start();
     }
 
     // 入力が不正解だと示す
     private void incorrectResponse() {
-        questionLabel.setBackground(new Color(255 ,179 ,193));
+        final boolean[] state = new boolean[1];
+        blinkTimer = new Timer(60, e -> {
+            state[0] = !state[0];
+            if (state[0]) {
+                questionLabel.setBackground(new Color(255 , 190, 205));
+            } else {
+                questionLabel.setBackground(new Color(255 , 227, 243));
+            }
+        });
+        blinkTimer.setRepeats(true);
+        blinkTimer.setInitialDelay(0);
+        blinkTimer.start();
     }
 
     // 今やっている問題をテキストエディターで開く
@@ -118,12 +142,12 @@ public class MyankiPanel extends JPanel {
     private void checkEvent() {
         if (appFrame.game.checkAnswer()) {
             correctResponse();
-            timer = new Timer(150, new TimerListener("next"));
-            timer.start();
+            delayTimer = new Timer(190, new TimerListener("next"));
+            delayTimer.start();
         } else {
             incorrectResponse();
-            timer = new Timer(150, new TimerListener("stay"));
-            timer.start();
+            delayTimer = new Timer(190, new TimerListener("stay"));
+            delayTimer.start();
             inputField.selectAll();
         }
     }
@@ -138,7 +162,8 @@ public class MyankiPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            timer.stop();
+            blinkTimer.stop();
+            delayTimer.stop();
             questionLabel.setFont(new Font("sanserif", Font.PLAIN, 13));
             questionLabel.setBackground(new Color(250, 250, 255));
 
