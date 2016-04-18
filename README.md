@@ -2,7 +2,7 @@ MyankiJ
 ====
 瞬間英作文を訓練するためのアプリ  
 
-![myankij](https://cloud.githubusercontent.com/assets/6790930/13602889/bf0f5286-e57c-11e5-8523-42a76fa37fc5.gif)
+![myankij](https://cloud.githubusercontent.com/assets/6790930/14600842/bfd8f068-0599-11e6-92f5-913c9fafca43.gif)
 
 ## これは何か
 [akht/myanki](https://github.com/akht/myanki) をGUIアプリ化したもの。
