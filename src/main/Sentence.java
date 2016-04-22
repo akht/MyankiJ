@@ -42,8 +42,22 @@ public class Sentence {
                 .anyMatch(sentence.getList()::contains);
     }
 
-    public int distanceFrom(Sentence sentence) {
+    // Sentence型のインスタンスを比べた結果に応じてEnum型で定義された値を返す
+    // ふたつが等しいとみなせればCORRECT
+    // 等しくないが近ければCLOSE
+    // 等しくなく近くもなければFAR
+    // 全く等しくなければINCORRECT を返す
+    public Distance getDistanceFrom(Sentence sentence) {
+        if (nearlyEquals(sentence)) return Distance.CORRECT;
+
         String str = sentence.getFormatted().replaceAll(" ", "");
-        return SentenceUtil.levenshteinDistance(this.formatted.replaceAll(" ", ""), str);
+        int d = SentenceUtil.levenshteinDistance(this.formatted.replaceAll(" ", ""), str);
+        if (d <= 4) {
+            return Distance.CLOSE;
+        } else if (d <= 10) {
+            return Distance.FAR;
+        } else {
+            return Distance.INCORRECT;
+        }
     }
 }
