@@ -43,7 +43,7 @@ public class Sentence {
     }
 
     public int distanceFrom(Sentence sentence) {
-        String str = sentence.getFormatted();
-        return SentenceUtil.levenshteinDistance(this.formatted, str);
+        String str = sentence.getFormatted().replaceAll(" ", "");
+        return SentenceUtil.levenshteinDistance(this.formatted.replaceAll(" ", ""), str);
     }
 }
