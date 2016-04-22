@@ -93,30 +93,16 @@ public class MyankiPanel extends JPanel {
         questionLabel.setText(question);
     }
 
-    // 入力が正解だと示す
-    private void correctResponse() {
-        final boolean[] state = new boolean[1];
-        blinkTimer = new Timer(75, e -> {
-            state[0] = !state[0];
-            if (state[0]) {
-                questionLabel.setBackground(new Color(152, 210, 253));
-            } else {
-                questionLabel.setBackground(new Color(216, 238,255));
-            }
-            repaint();
-        });
-        blinkTimer.setRepeats(true);
-        blinkTimer.setInitialDelay(0);
-        blinkTimer.start();
-    }
-
     // 入力が不正解だと示す
-    // 編集距離に応じて反応をわける
-    private void incorrectResponse(Distance distance) {
+    // 答えからの近さに応じて反応を変える
+    private void showResponse(Distance distance) {
         Color color = null;
         Color paleColor = null;
-
         switch (distance) {
+            case CORRECT:
+                color = new Color(152, 210, 253);
+                paleColor = new Color(216, 238,255);
+                break;
             case CLOSE:
                 color = new Color(204, 255, 236);
                 paleColor = new Color(240, 255, 250);
@@ -161,19 +147,14 @@ public class MyankiPanel extends JPanel {
     // Timerを使用してアクションリスナの実行を150ms遅らせる
     // その間に、正誤判定に応じたレスポンスを返す
     private void checkEvent() {
-        Distance distance = appFrame.game.checkAnswer();
-        switch (distance) {
-            case CORRECT:
-                correctResponse();
-                delayTimer = new Timer(190, new TimerListener("next"));
-                delayTimer.start();
-                break;
-            default:
-                incorrectResponse(distance);
-                delayTimer = new Timer(190, new TimerListener("stay"));
-                delayTimer.start();
-                inputField.selectAll();
+        Distance d = appFrame.game.checkAnswer();
+        showResponse(d);
+        if (d == Distance.CORRECT) {
+            delayTimer = new Timer(190, new TimerListener("next"));
+        } else {
+            delayTimer = new Timer(190, new TimerListener("stay"));
         }
+        delayTimer.start();
     }
 
     // Timerによって発生を150ms遅延させる
