@@ -47,6 +47,13 @@ public class Game {
         return userInput.nearlyEquals(correctAnswer);
     }
 
+    // 編集距離を返す
+    public int getDistance() {
+        Sentence correctAnswer = new Sentence(quiz.getAnswer(index));
+        Sentence userInput = new Sentence(myankiPanel.inputField.getText());
+        return userInput.distanceFrom(correctAnswer);
+    }
+
     public void nextQuestion() {
         index++;
         if (index < 10) {

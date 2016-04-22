@@ -111,14 +111,25 @@ public class MyankiPanel extends JPanel {
     }
 
     // 入力が不正解だと示す
-    private void incorrectResponse() {
+    // 編集距離に応じて反応をわける
+    private void incorrectResponse(int distance) {
+        Color color;
+        Color paleColor;
+        if (distance < 4) {
+            color = new Color(243, 255, 182);
+            paleColor = new Color(255, 254, 232);
+        } else {
+            color = new Color(255 , 190, 205);
+            paleColor = new Color(255 , 227, 243);
+        }
+
         final boolean[] state = new boolean[1];
         blinkTimer = new Timer(60, e -> {
             state[0] = !state[0];
             if (state[0]) {
-                questionLabel.setBackground(new Color(255 , 190, 205));
+                questionLabel.setBackground(color);
             } else {
-                questionLabel.setBackground(new Color(255 , 227, 243));
+                questionLabel.setBackground(paleColor);
             }
         });
         blinkTimer.setRepeats(true);
@@ -145,7 +156,7 @@ public class MyankiPanel extends JPanel {
             delayTimer = new Timer(190, new TimerListener("next"));
             delayTimer.start();
         } else {
-            incorrectResponse();
+            incorrectResponse(appFrame.game.getDistance());
             delayTimer = new Timer(190, new TimerListener("stay"));
             delayTimer.start();
             inputField.selectAll();

@@ -5,10 +5,16 @@ import java.util.List;
 
 // 解答文またはユーザーからの入力文を表すクラス
 public class Sentence {
+    private String formatted;
     private List<String> list;
 
     public Sentence(String str) {
-        this.list = makeList(str);
+        this.formatted = SentenceUtil.format(str);
+        this.list = makeList(formatted);
+    }
+
+    public String getFormatted() {
+        return this.formatted;
     }
 
     public List<String> getList() {
@@ -18,7 +24,6 @@ public class Sentence {
     // Utilクラスのメソッドを使用し
     // 正誤判定に必要なList<String>を生成して返す
     public List<String> makeList(String str) {
-        str = SentenceUtil.format(str);
         List<String> list = new ArrayList<>();
         list.add(str);
 
@@ -35,5 +40,10 @@ public class Sentence {
     public boolean nearlyEquals(Sentence sentence) {
         return this.getList().stream()
                 .anyMatch(sentence.getList()::contains);
+    }
+
+    public int distanceFrom(Sentence sentence) {
+        String str = sentence.getFormatted();
+        return SentenceUtil.levenshteinDistance(this.formatted, str);
     }
 }
