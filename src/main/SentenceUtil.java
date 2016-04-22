@@ -29,6 +29,40 @@ public final class SentenceUtil {
                 .replaceAll("\\s{2,}", " ");    // 連続する空白をひとつの空白に
     }
 
+    // レーベンシュタイン距離を利用し、２つの文字列の編集距離を返す
+    public static int levenshteinDistance(String s1, String s2) {
+        // (s1の文字数+1)x(s2の文字数+1)の行列を用意
+        // +1は空文字("")のぶん
+        int row = s1.length() + 1;
+        int column = s2.length() + 1;
+        int[][] matrix = new int[row][column];
+
+        // matrixの1列目を埋める
+        for (int i = 0; i < row; i++) {
+            matrix[i][0] = i;
+        }
+        // matrixの1行目を埋める
+        for (int i = 0; i < column; i++) {
+            matrix[0][i] = i;
+        }
+
+        char[] s1Arr = s1.toCharArray();
+        char[] s2Arr = s2.toCharArray();
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < column; j++) {
+                int x;
+                if (s1Arr[i-1] == s2Arr[j-1]) {
+                    x = 0;
+                } else {
+                    x = 1;
+                }
+                matrix[i][j] = Math.min(Math.min(matrix[i-1][j] + 1, matrix[i][j-1] + 1),
+                                        matrix[i-1][j-1] + x);
+            }
+        }
+        return matrix[row-1][column-1];
+    }
+
     // 短縮形を含む英文文字列を、短縮形を含まない英文文字列に変換するメソッド。
     //
     // 引数listの中に短縮形を含む要素があれば、
