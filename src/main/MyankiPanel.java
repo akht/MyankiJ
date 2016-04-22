@@ -18,6 +18,7 @@ public class MyankiPanel extends JPanel {
     public JLabel howManyTimesLabel;
     public JLabel countLabel;
     public JLabel questionLabel;
+    public final JLabel responseLabel;
     public JTextField inputField;
 
     public MyankiPanel(AppFrame appFrame) {
@@ -56,6 +57,11 @@ public class MyankiPanel extends JPanel {
         questionLabel.setHorizontalAlignment(JLabel.CENTER);
         // クリックしている間だけ答えを表示させるためのリスナ
         questionLabel.addMouseListener(new MyMouseListener());
+
+        // 入力に対するレスポンスを表示させるラベル
+        responseLabel = new JLabel();
+        responseLabel.setFont(new Font("sanserif", Font.PLAIN, 20));
+        responseLabel.setHorizontalAlignment(JLabel.CENTER);
         
         // ユーザーが入力するテキストフィールド
         inputField = new JTextField();
@@ -75,6 +81,7 @@ public class MyankiPanel extends JPanel {
         topPanel.add(editBtn);
         topPanel.add(countLabel);
         centerPanel.add(questionLabel);
+        centerPanel.add(responseLabel);
         bottomPanel.add(inputField);
         bottomPanel.add(nextBtn);
 
@@ -98,22 +105,27 @@ public class MyankiPanel extends JPanel {
     private void showResponse(Distance distance) {
         Color color = null;
         Color paleColor = null;
+        String kaomoji = null;
         switch (distance) {
             case CORRECT:
                 color = new Color(152, 210, 253);
                 paleColor = new Color(216, 238,255);
+                kaomoji = "(๑˃̵ᴗ˂̵)و Good✧";
                 break;
             case CLOSE:
                 color = new Color(204, 255, 236);
                 paleColor = new Color(240, 255, 250);
+                kaomoji = "(๑•̀ㅂ•́)و Close!";
                 break;
             case FAR:
                 color = new Color(251, 255, 198);
-                paleColor = new Color(249, 255, 223);
+                paleColor = new Color(251, 255, 231);
+                kaomoji = "(・ε・｀)umm...";
                 break;
             case INCORRECT:
                 color = new Color(255 , 160, 178);
                 paleColor = new Color(255 , 214, 222);
+                kaomoji = " ಠ_ಠ ";
                 break;
         }
 
@@ -131,6 +143,7 @@ public class MyankiPanel extends JPanel {
         blinkTimer.setRepeats(true);
         blinkTimer.setInitialDelay(0);
         blinkTimer.start();
+        responseLabel.setText(kaomoji);
     }
 
     // 今やっている問題をテキストエディターで開く
@@ -150,9 +163,9 @@ public class MyankiPanel extends JPanel {
         Distance d = appFrame.game.checkAnswer();
         showResponse(d);
         if (d == Distance.CORRECT) {
-            delayTimer = new Timer(190, new TimerListener("next"));
+            delayTimer = new Timer(250, new TimerListener("next"));
         } else {
-            delayTimer = new Timer(190, new TimerListener("stay"));
+            delayTimer = new Timer(250, new TimerListener("stay"));
         }
         delayTimer.start();
     }
@@ -169,6 +182,7 @@ public class MyankiPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             blinkTimer.stop();
             delayTimer.stop();
+            responseLabel.setText("");
             questionLabel.setFont(new Font("sanserif", Font.PLAIN, 13));
             questionLabel.setBackground(new Color(250, 250, 255));
 
