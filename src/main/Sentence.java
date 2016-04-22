@@ -43,10 +43,10 @@ public class Sentence {
     }
 
     // Sentence型のインスタンスを比べた結果に応じてEnum型で定義された値を返す
-    // ふたつが等しいとみなせればCORRECT
-    // 等しくないが近ければCLOSE
-    // 等しくなく近くもなければFAR
-    // 全く等しくなければINCORRECT を返す
+    // ふたつが等しいとみなせればDistance.CORRECT
+    // 等しくないが近ければDistance.CLOSE
+    // 等しくなく近くもなければDistance.FAR
+    // 全く等しくなければDistance.INCORRECT を返す
     public Distance getDistanceFrom(Sentence sentence) {
         if (nearlyEquals(sentence)) return Distance.CORRECT;
 

@@ -112,24 +112,34 @@ public class MyankiPanel extends JPanel {
 
     // 入力が不正解だと示す
     // 編集距離に応じて反応をわける
-    private void incorrectResponse(int distance) {
-        Color color;
-        Color paleColor;
-        if (distance < 4) {
-            color = new Color(243, 255, 182);
-            paleColor = new Color(255, 254, 232);
-        } else {
-            color = new Color(255 , 190, 205);
-            paleColor = new Color(255 , 227, 243);
+    private void incorrectResponse(Distance distance) {
+        Color color = null;
+        Color paleColor = null;
+
+        switch (distance) {
+            case CLOSE:
+                color = new Color(204, 255, 236);
+                paleColor = new Color(240, 255, 250);
+                break;
+            case FAR:
+                color = new Color(251, 255, 198);
+                paleColor = new Color(249, 255, 223);
+                break;
+            case INCORRECT:
+                color = new Color(255 , 160, 178);
+                paleColor = new Color(255 , 214, 222);
+                break;
         }
 
         final boolean[] state = new boolean[1];
+        Color finalColor = color;
+        Color finalPaleColor = paleColor;
         blinkTimer = new Timer(60, e -> {
             state[0] = !state[0];
             if (state[0]) {
-                questionLabel.setBackground(color);
+                questionLabel.setBackground(finalColor);
             } else {
-                questionLabel.setBackground(paleColor);
+                questionLabel.setBackground(finalPaleColor);
             }
         });
         blinkTimer.setRepeats(true);
@@ -151,15 +161,18 @@ public class MyankiPanel extends JPanel {
     // Timerを使用してアクションリスナの実行を150ms遅らせる
     // その間に、正誤判定に応じたレスポンスを返す
     private void checkEvent() {
-        if (appFrame.game.checkAnswer()) {
-            correctResponse();
-            delayTimer = new Timer(190, new TimerListener("next"));
-            delayTimer.start();
-        } else {
-            incorrectResponse(appFrame.game.getDistance());
-            delayTimer = new Timer(190, new TimerListener("stay"));
-            delayTimer.start();
-            inputField.selectAll();
+        Distance distance = appFrame.game.checkAnswer();
+        switch (distance) {
+            case CORRECT:
+                correctResponse();
+                delayTimer = new Timer(190, new TimerListener("next"));
+                delayTimer.start();
+                break;
+            default:
+                incorrectResponse(distance);
+                delayTimer = new Timer(190, new TimerListener("stay"));
+                delayTimer.start();
+                inputField.selectAll();
         }
     }
 
