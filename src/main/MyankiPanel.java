@@ -61,6 +61,7 @@ public class MyankiPanel extends JPanel {
         // 入力に対するレスポンスを表示させるラベル
         responseLabel = new JLabel();
         responseLabel.setFont(new Font("sanserif", Font.PLAIN, 20));
+        responseLabel.setForeground(new Color(80, 80, 80));
         responseLabel.setHorizontalAlignment(JLabel.CENTER);
         
         // ユーザーが入力するテキストフィールド
@@ -108,31 +109,31 @@ public class MyankiPanel extends JPanel {
         String kaomoji = null;
         switch (distance) {
             case CORRECT:
-                color = new Color(152, 210, 253);
+                color = new Color(179, 220, 253);
                 paleColor = new Color(216, 238,255);
-                kaomoji = "(๑˃̵ᴗ˂̵)و Good✧";
+                kaomoji = "(⋈◍＞◡＜◍)。✧♡";
                 break;
             case CLOSE:
-                color = new Color(204, 255, 236);
-                paleColor = new Color(240, 255, 250);
-                kaomoji = "(๑•̀ㅂ•́)و Close!";
+                color = new Color(217, 255, 234);
+                paleColor = new Color(237, 255, 250);
+                kaomoji = "(๑•̀ㅂ•́)و おしい!";
                 break;
             case FAR:
-                color = new Color(251, 255, 198);
-                paleColor = new Color(251, 255, 231);
-                kaomoji = "(・ε・｀)umm...";
+                color = new Color(255, 254, 222);
+                paleColor = new Color(250, 255, 239);
+                kaomoji = "( •́ㅿ•̀ )うーん";
                 break;
             case INCORRECT:
-                color = new Color(255 , 160, 178);
-                paleColor = new Color(255 , 214, 222);
-                kaomoji = " ಠ_ಠ ";
+                color = new Color(255 , 179, 196);
+                paleColor = new Color(255 , 226, 234);
+                kaomoji = " (ಠ_ಠ).｡oஇ";
                 break;
         }
 
         final boolean[] state = new boolean[1];
         Color finalColor = color;
         Color finalPaleColor = paleColor;
-        blinkTimer = new Timer(60, e -> {
+        blinkTimer = new Timer(80, e -> {
             state[0] = !state[0];
             if (state[0]) {
                 questionLabel.setBackground(finalColor);
@@ -163,9 +164,9 @@ public class MyankiPanel extends JPanel {
         Distance d = appFrame.game.checkAnswer();
         showResponse(d);
         if (d == Distance.CORRECT) {
-            delayTimer = new Timer(250, new TimerListener("next"));
+            delayTimer = new Timer(500, new TimerListener("next"));
         } else {
-            delayTimer = new Timer(250, new TimerListener("stay"));
+            delayTimer = new Timer(500, new TimerListener("stay"));
         }
         delayTimer.start();
     }
