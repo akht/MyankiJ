@@ -23,6 +23,17 @@ public class SentenceUtilTest {
         }
     }
 
+    public static class testGetDistance {
+        @Test
+        public void ふたつの文字列の編集距離を返す() {
+            String str1 = "this is a test string".replaceAll(" ", "");
+            String str2 = "this is not a test string".replaceAll(" ", "");
+            int distance = SentenceUtil.getDistance(str1, str2);
+
+            assertThat(distance, is(3));
+        }
+    }
+
     public static class testUnfoldShortform {
         @Test
         public void 短縮形は元の形に展開される() {

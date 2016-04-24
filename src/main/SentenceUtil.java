@@ -30,7 +30,7 @@ public final class SentenceUtil {
     }
 
     // レーベンシュタイン距離を利用し、２つの文字列の編集距離を返す
-    public static int levenshteinDistance(String s1, String s2) {
+    public static int getDistance(String s1, String s2) {
         // (s1の文字数+1)x(s2の文字数+1)の行列を用意
         // +1は空文字("")のぶん
         int row = s1.length() + 1;

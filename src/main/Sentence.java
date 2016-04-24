@@ -51,7 +51,7 @@ public class Sentence {
         if (nearlyEquals(sentence)) return Distance.CORRECT;
 
         String str = sentence.getFormatted().replaceAll(" ", "");
-        int d = SentenceUtil.levenshteinDistance(this.formatted.replaceAll(" ", ""), str);
+        int d = SentenceUtil.getDistance(this.formatted.replaceAll(" ", ""), str);
         if (d <= 3) {
             return Distance.CLOSE;
         } else if (d <= 6) {
