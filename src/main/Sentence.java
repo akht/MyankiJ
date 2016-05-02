@@ -49,7 +49,8 @@ public class Sentence {
     // 全く等しくなければDistance.INCORRECT を返す
     public Distance getDistanceFrom(Sentence sentence) {
         if (nearlyEquals(sentence)) return Distance.CORRECT;
-
+        if (this.equals("")) return Distance.INCORRECT;
+        
         String str = sentence.getFormatted().replaceAll(" ", "");
         int d = SentenceUtil.getDistance(this.formatted.replaceAll(" ", ""), str);
         if (d <= 3) {
