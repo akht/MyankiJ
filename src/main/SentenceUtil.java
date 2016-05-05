@@ -29,6 +29,20 @@ public final class SentenceUtil {
                 .replaceAll("\\s{2,}", " ");    // 連続する空白をひとつの空白に
     }
 
+    // 文字列中の不定冠詞のインデックスを返す
+    // 不定冠詞がなければ0を返す
+    // aなら正の値、anなら負の値を返す
+    public static int getIndexOfIndefiniteArticle(String s) {
+        List<String> sList = Arrays.asList(s.split(" "));
+        if (sList.contains("a")) {
+            return sList.indexOf("a");
+        }
+        if (sList.contains("an")) {
+            return -sList.indexOf("an");
+        }
+        return 0;
+    }
+
     // レーベンシュタイン距離を利用し、２つの文字列の編集距離を返す
     public static int getDistance(String s1, String s2) {
         // (s1の文字数+1)x(s2の文字数+1)の行列を用意

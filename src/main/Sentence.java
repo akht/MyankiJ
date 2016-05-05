@@ -7,6 +7,7 @@ import java.util.List;
 public class Sentence {
     private String formatted;
     private List<String> list;
+    private int indexOfIndefiniteArticles;
 
     public Sentence(String str) {
         this.formatted = SentenceUtil.format(str);
@@ -19,6 +20,10 @@ public class Sentence {
 
     public List<String> getList() {
         return this.list;
+    }
+
+    public int getIndexOfIndefiniteArticles() {
+        return indexOfIndefiniteArticles;
     }
 
     // Utilクラスのメソッドを使用し
@@ -53,7 +58,14 @@ public class Sentence {
         
         String str = sentence.getFormatted().replaceAll(" ", "");
         int d = SentenceUtil.getDistance(this.formatted.replaceAll(" ", ""), str);
-        if (d <= 3) {
+        if (d == 1) {
+            this.indexOfIndefiniteArticles = SentenceUtil.getIndexOfIndefiniteArticle(this.formatted);
+            if (this.indexOfIndefiniteArticles != 0) {
+                return Distance.ARTICLE;
+            } else {
+                return Distance.CLOSE;
+            }
+        } else if (d <= 3 && d >= 2) {
             return Distance.CLOSE;
         } else if (d <= 6) {
             return Distance.FAR;

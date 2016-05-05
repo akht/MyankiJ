@@ -113,6 +113,19 @@ public class MyankiPanel extends JPanel {
                 paleColor = new Color(216, 238,255);
                 kaomoji = "(⋈◍＞◡＜◍)。✧♡";
                 break;
+            case ARTICLE:   // 間違っている不定冠詞にフォーカスを当てる。break文は不要。
+                int articleIndex = appFrame.game.userInput.getIndexOfIndefiniteArticles();
+                String[] arr = inputField.getText().split(" ");
+                int count = 0;
+                for (int i = 0; i < Math.abs(articleIndex); i++) {
+                    count += arr[i].length();
+                }
+                int from = count + Math.abs(articleIndex);
+                int to = from + 1;
+                if (articleIndex < 0) {
+                    to += 1;
+                }
+                inputField.select(from, to);
             case CLOSE:
                 color = new Color(217, 255, 234);
                 paleColor = new Color(237, 255, 250);

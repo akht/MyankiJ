@@ -8,6 +8,7 @@ public class Game {
     private String logFile = "files/myankilog.txt";
     public GameLog gameLog;
 
+    public Sentence userInput;
     private long start;
     private long end;
 
@@ -43,7 +44,7 @@ public class Game {
     // 正誤判定
     public Distance checkAnswer() {
         Sentence correctAnswer = new Sentence(quiz.getAnswer(index));
-        Sentence userInput = new Sentence(myankiPanel.inputField.getText());
+        userInput = new Sentence(myankiPanel.inputField.getText());
         return userInput.getDistanceFrom(correctAnswer);
     }
 
