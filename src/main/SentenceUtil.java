@@ -31,14 +31,13 @@ public final class SentenceUtil {
 
     // 文字列中の不定冠詞のインデックスを返す
     // 不定冠詞がなければ0を返す
-    // aなら正の値、anなら負の値を返す
     public static int getIndexOfIndefiniteArticle(String s) {
         List<String> sList = Arrays.asList(s.split(" "));
         if (sList.contains("a")) {
             return sList.indexOf("a");
         }
         if (sList.contains("an")) {
-            return -sList.indexOf("an");
+            return sList.indexOf("an");
         }
         return 0;
     }

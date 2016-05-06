@@ -117,14 +117,11 @@ public class MyankiPanel extends JPanel {
                 int articleIndex = appFrame.game.userInput.getIndexOfIndefiniteArticles();
                 String[] arr = inputField.getText().split(" ");
                 int count = 0;
-                for (int i = 0; i < Math.abs(articleIndex); i++) {
+                for (int i = 0; i < articleIndex; i++) {
                     count += arr[i].length();
                 }
-                int from = count + Math.abs(articleIndex);
-                int to = from + 1;
-                if (articleIndex < 0) {
-                    to += 1;
-                }
+                int from = count + articleIndex;
+                int to = from + arr[articleIndex].length();
                 inputField.select(from, to);
             case CLOSE:
                 color = new Color(217, 255, 234);
