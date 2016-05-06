@@ -104,10 +104,6 @@ public class MyankiPanel extends JPanel {
     // 入力が不正解だと示す
     // 答えからの近さに応じて反応を変える
     private void showResponse(Distance distance) {
-        Color color = distance.getFirst();
-        Color paleColor = distance.getSecond();
-        String kaomoji = distance.getKaomoji();
-
         if (distance == Distance.ARTICLE) {
             int articleIndex = appFrame.game.userInput.getIndexOfIndefiniteArticles();
                 String[] arr = inputField.getText().split(" ");
@@ -124,15 +120,15 @@ public class MyankiPanel extends JPanel {
         blinkTimer = new Timer(80, e -> {
             state[0] = !state[0];
             if (state[0]) {
-                questionLabel.setBackground(color);
+                questionLabel.setBackground(distance.getFirst());
             } else {
-                questionLabel.setBackground(paleColor);
+                questionLabel.setBackground(distance.getSecond());
             }
         });
         blinkTimer.setRepeats(true);
         blinkTimer.setInitialDelay(0);
         blinkTimer.start();
-        responseLabel.setText(kaomoji);
+        responseLabel.setText(distance.getKaomoji());
     }
 
     // 今やっている問題をテキストエディターで開く
