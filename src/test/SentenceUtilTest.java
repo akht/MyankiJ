@@ -27,17 +27,12 @@ public class SentenceUtilTest {
         @Test
         public void 不定冠詞がaの場合はインデックスとして正の数を返す() {
             String s1 = "this is a delicious apple";
-
-            assertThat(SentenceUtil.getIndexOfIndefiniteArticle(s1), is(2));
-        }
-
-        @Test
-        public void 不定冠詞がanの場合はインデックスにマイナス符号をつけて返す() {
             String s2 = "this is an apple";
 
-            assertThat(SentenceUtil.getIndexOfIndefiniteArticle(s2), is(-2));
+            assertThat(SentenceUtil.getIndexOfIndefiniteArticle(s1), is(2));
+            assertThat(SentenceUtil.getIndexOfIndefiniteArticle(s2), is(2));
         }
-
+        
         @Test
         public void 不定冠詞がない場合は0を返す() {
             String s3 = "this sentence has no Indefinite articles";
