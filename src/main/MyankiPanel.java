@@ -104,17 +104,12 @@ public class MyankiPanel extends JPanel {
     // 入力が不正解だと示す
     // 答えからの近さに応じて反応を変える
     private void showResponse(Distance distance) {
-        Color color = null;
-        Color paleColor = null;
-        String kaomoji = null;
-        switch (distance) {
-            case CORRECT:
-                color = new Color(179, 220, 253);
-                paleColor = new Color(216, 238,255);
-                kaomoji = "(⋈◍＞◡＜◍)。✧♡";
-                break;
-            case ARTICLE:   // 間違っている不定冠詞にフォーカスを当てる。break文は不要。
-                int articleIndex = appFrame.game.userInput.getIndexOfIndefiniteArticles();
+        Color color = distance.getFirst();
+        Color paleColor = distance.getSecond();
+        String kaomoji = distance.getKaomoji();
+
+        if (distance == Distance.ARTICLE) {
+            int articleIndex = appFrame.game.userInput.getIndexOfIndefiniteArticles();
                 String[] arr = inputField.getText().split(" ");
                 int count = 0;
                 for (int i = 0; i < articleIndex; i++) {
@@ -123,32 +118,15 @@ public class MyankiPanel extends JPanel {
                 int from = count + articleIndex;
                 int to = from + arr[articleIndex].length();
                 inputField.select(from, to);
-            case CLOSE:
-                color = new Color(217, 255, 234);
-                paleColor = new Color(237, 255, 250);
-                kaomoji = "(๑•̀ㅂ•́)و おしい!";
-                break;
-            case FAR:
-                color = new Color(255, 254, 222);
-                paleColor = new Color(250, 255, 239);
-                kaomoji = "( •́ㅿ•̀ )うーん";
-                break;
-            case INCORRECT:
-                color = new Color(255 , 179, 196);
-                paleColor = new Color(255 , 226, 234);
-                kaomoji = " (ಠ_ಠ).｡oஇ";
-                break;
         }
 
         final boolean[] state = new boolean[1];
-        Color finalColor = color;
-        Color finalPaleColor = paleColor;
         blinkTimer = new Timer(80, e -> {
             state[0] = !state[0];
             if (state[0]) {
-                questionLabel.setBackground(finalColor);
+                questionLabel.setBackground(color);
             } else {
-                questionLabel.setBackground(finalPaleColor);
+                questionLabel.setBackground(paleColor);
             }
         });
         blinkTimer.setRepeats(true);
