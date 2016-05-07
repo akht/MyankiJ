@@ -5,10 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 // Sentenceクラスで使用するユーティリティメソッドをまとめたクラス
@@ -27,6 +24,20 @@ public final class SentenceUtil {
                 .replaceAll("\\(.*?\\)", "")    // 丸括弧と丸括弧の中身を削除
                 .replaceAll("\\-", " - ")       // ハイフンの前後に空白を追加
                 .replaceAll("\\s{2,}", " ");    // 連続する空白をひとつの空白に
+    }
+
+    // 文字列中に不定冠詞aがあればanに、anがあればaに置き換え、
+    // 置き換えた後の文字列をリストに格納して返す
+    public static List<String> replaceIndefiniteArticles(String formattedString) {
+        List<String> retList = new ArrayList<>();
+        if (formattedString.contains(" a ")) {
+            String aToAn = formattedString.replaceAll(" a ", " an ");
+            retList.add(aToAn);
+        } else if (formattedString.contains(" an ")) {
+            String AnToA = formattedString.replaceAll(" an ", " a ");
+            retList.add(AnToA);
+        }
+        return retList;
     }
 
     // 文字列中の不定冠詞のインデックスを返す

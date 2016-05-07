@@ -10,16 +10,16 @@ public class Sentence {
     private int indexOfIndefiniteArticles;
 
     public Sentence(String str) {
-        this.formatted = SentenceUtil.format(str);
-        this.list = makeList(formatted);
+        formatted = SentenceUtil.format(str);
+        list = makeList(formatted);
     }
 
     public String getFormatted() {
-        return this.formatted;
+        return formatted;
     }
 
     public List<String> getList() {
-        return this.list;
+        return list;
     }
 
     public int getIndexOfIndefiniteArticles() {
@@ -43,29 +43,37 @@ public class Sentence {
     // 自分自身のlistと、引数sentenceのlistに
     // ひとつでも共通する要素があればtrueを返す
     public boolean nearlyEquals(Sentence sentence) {
-        return this.getList().stream()
+        return list.stream()
                 .anyMatch(sentence.getList()::contains);
     }
 
     // Sentence型のインスタンスを比べた結果に応じてEnum型で定義された値を返す
     // ふたつが等しいとみなせればDistance.CORRECT
+    // 不定冠詞だけの違いならばDistance.ARTICLE
     // 等しくないが近ければDistance.CLOSE
     // 等しくなく近くもなければDistance.FAR
     // 全く等しくなければDistance.INCORRECT を返す
     public Distance getDistanceFrom(Sentence sentence) {
         if (nearlyEquals(sentence)) return Distance.CORRECT;
-        if (this.equals("")) return Distance.INCORRECT;
-        
-        String str = sentence.getFormatted().replaceAll(" ", "");
-        int d = SentenceUtil.getDistance(this.formatted.replaceAll(" ", ""), str);
-        if (d == 1) {
-            this.indexOfIndefiniteArticles = SentenceUtil.getIndexOfIndefiniteArticle(this.formatted);
-            if (this.indexOfIndefiniteArticles != 0) {
+        if (formatted.equals("")) return Distance.INCORRECT;
+
+        // 短縮形を含み、かつ不定冠詞のみが違う場合を判定
+        // 不定冠詞aとanを入れ替えてみてnearlyEquals()からtrueが返ってくれば
+        // ふたつの文字列は不定冠詞だけの違いとみなせる
+        if (formatted.contains(" a ") ^ formatted.contains(" an ")) {   // XOR
+            // aとanのどちらか一方のみを含んでいるとき
+            List<String> pseudoList = SentenceUtil.replaceIndefiniteArticles(formatted);
+            boolean anyMatch = SentenceUtil.unfoldShortform(pseudoList).stream()
+                                        .anyMatch(sentence.getList()::contains);
+            if (anyMatch) {
+                indexOfIndefiniteArticles = SentenceUtil.getIndexOfIndefiniteArticle(formatted);
                 return Distance.ARTICLE;
-            } else {
-                return Distance.CLOSE;
             }
-        } else if (d <= 3 && d >= 2) {
+        }
+
+        String str = sentence.getFormatted().replaceAll(" ", "");
+        int d = SentenceUtil.getDistance(formatted.replaceAll(" ", ""), str);
+        if (d <= 3) {
             return Distance.CLOSE;
         } else if (d <= 6) {
             return Distance.FAR;
