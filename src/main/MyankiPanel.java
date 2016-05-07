@@ -117,12 +117,12 @@ public class MyankiPanel extends JPanel {
         }
 
         final boolean[] state = new boolean[1];
-        blinkTimer = new Timer(80, e -> {
+        blinkTimer = new Timer(distance.getMilliseconds(), e -> {
             state[0] = !state[0];
             if (state[0]) {
-                questionLabel.setBackground(distance.getFirst());
+                questionLabel.setBackground(distance.getFirstColor());
             } else {
-                questionLabel.setBackground(distance.getSecond());
+                questionLabel.setBackground(distance.getSecondColor());
             }
         });
         blinkTimer.setRepeats(true);
