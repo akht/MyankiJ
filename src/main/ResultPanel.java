@@ -49,8 +49,8 @@ public class ResultPanel extends JPanel {
         resultBottomPanel.add(panelForLabel);
         resultBottomPanel.add(panelForBtns);
 
-        this.add(resultTopPanel, BorderLayout.CENTER);
-        this.add(resultBottomPanel, BorderLayout.SOUTH);
+        add(resultTopPanel, BorderLayout.CENTER);
+        add(resultBottomPanel, BorderLayout.SOUTH);
     }
 
     public void setResultText(String duration) {

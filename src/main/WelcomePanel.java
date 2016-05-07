@@ -17,6 +17,6 @@ public class WelcomePanel extends JPanel {
         JButton startBtn = new JButton("Click to play");
         startBtn.setBorderPainted(false);
         startBtn.addActionListener(e -> appFrame.game.play());
-        this.add(startBtn, BorderLayout.CENTER);
+        add(startBtn, BorderLayout.CENTER);
     }
 }

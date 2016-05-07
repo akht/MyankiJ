@@ -86,9 +86,9 @@ public class MyankiPanel extends JPanel {
         bottomPanel.add(inputField);
         bottomPanel.add(nextBtn);
 
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        add(topPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     public void setMyankiText(Quiz quiz, int index, GameLog gameLog) {

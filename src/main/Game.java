@@ -17,8 +17,8 @@ public class Game {
 
     public Game(AppFrame appFrame) {
         this.appFrame = appFrame;
-        this.myankiPanel = appFrame.myankiPanel;
-        this.resultPanel = appFrame.resultPanel;
+        myankiPanel = appFrame.myankiPanel;
+        resultPanel = appFrame.resultPanel;
         initGame();
     }
 

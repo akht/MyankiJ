@@ -19,17 +19,17 @@ public class Quiz {
     public String targetFile;
 
     public Quiz() {
-        this.filelist = makeFilelistInDir(resPath);
-        this.targetFile = pickFileRandomly(filelist);
-        this.list = makeQuizList(targetFile);
+        filelist = makeFilelistInDir(resPath);
+        targetFile = pickFileRandomly(filelist);
+        list = makeQuizList(targetFile);
     }
 
     public String getQestion(int index) {
-        return this.list.get(index)[0];
+        return list.get(index)[0];
     }
 
     public String getAnswer(int index) {
-        return this.list.get(index)[1];
+        return list.get(index)[1];
     }
 
     // res/内の全てのファイルのファイル名を配列に格納
@@ -59,7 +59,7 @@ public class Quiz {
 
     public void makeQuizListAgain() {
         targetFile = pickFileRandomly(filelist);
-        this.list = makeQuizList(targetFile);
+        list = makeQuizList(targetFile);
     }
 }
 

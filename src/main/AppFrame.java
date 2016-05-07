@@ -28,14 +28,14 @@ public class AppFrame extends JFrame {
         addWindowListener(new MyWindowListener());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.welcomePanel = new WelcomePanel(this);
-        this.myankiPanel = new MyankiPanel(this);
-        this.resultPanel = new ResultPanel(this);
+        welcomePanel = new WelcomePanel(this);
+        myankiPanel = new MyankiPanel(this);
+        resultPanel = new ResultPanel(this);
     }
 
     public void startGame() {
         contentPane.add(welcomePanel);
-        this.game = new Game(this);
+        game = new Game(this);
     }
 
     // MyankiPanelへ画面遷移
